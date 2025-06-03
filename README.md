@@ -13,7 +13,7 @@ O Legado é uma ferramenta que busca arquivar projetos feitos dentro da institui
 ### Instalação
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/nome-do-projeto.git
+   git clone https://github.com/luke96neto/Legado.git
 2. Instale as dependências:
    ```bash
     composer install
