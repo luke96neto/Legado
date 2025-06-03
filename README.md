@@ -29,4 +29,5 @@ O Legado é uma ferramenta que busca arquivar projetos feitos dentro da institui
    touch database/database.sqlite
 2. Configure o arquivo .env:
    DB_CONNECTION=sqlite
+   
    DB_DATABASE=/caminho/absoluto/para/database/database.sqlite
