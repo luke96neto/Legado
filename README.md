@@ -32,3 +32,7 @@ O Legado é uma ferramenta que busca arquivar projetos feitos dentro da institui
    DB_CONNECTION=sqlite
    
    DB_DATABASE=/caminho/absoluto/para/database/database.sqlite
+3. Criar e executar migrations:
+   ```bash
+   php artisan migrate
+   
