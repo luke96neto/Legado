@@ -28,10 +28,11 @@ O Legado é uma ferramenta que busca arquivar projetos feitos dentro da institui
    ```bash
    touch database/database.sqlite
 2. Configure o arquivo .env:
-   
-   DB_CONNECTION=sqlite
-   
+
+   ```env
+   DB_CONNECTION=sqlite   
    DB_DATABASE=/caminho/absoluto/para/database/database.sqlite
+
 3. Criar e executar migrations:
    ```bash
    php artisan migrate
@@ -39,20 +40,20 @@ O Legado é uma ferramenta que busca arquivar projetos feitos dentro da institui
 ## Configuração de Login via GitHub
 
 1. Criar OAuth Application
-
-1.1 Acesse [GitHub Developer Settings](https://github.com/settings/developers)
-1.2 Clique em "New OAuth App"
-1.3 Configure:
-   - Name: `Legado`
-   - Homepage: `http://localhost:8000`
-   - Callback: `http://localhost:8000/auth/github/callback`
+   
+   1.1 Acesse [GitHub Developer Settings](https://github.com/settings/developers)
+   1.2 Clique em "New OAuth App"
+   1.3 Configure:
+       - Name: `Legado`
+       - Homepage: `http://localhost:8000`
+       - Callback: `http://localhost:8000/auth/github/callback`
 
 2. Configurar Ambiente
 
-Adicione ao `.env`:
-```env
-GITHUB_CLIENT_ID=seu_id_aqui
-GITHUB_CLIENT_SECRET=seu_secret_aqui
-GITHUB_REDIRECT=http://localhost:8000/auth/github/callback
+    Adicione ao `.env`:
+    ```env
+    GITHUB_CLIENT_ID=seu_id_aqui
+    GITHUB_CLIENT_SECRET=seu_secret_aqui
+    GITHUB_REDIRECT=http://localhost:8000/auth/github/callback
 
     
