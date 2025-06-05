@@ -36,3 +36,23 @@ O Legado é uma ferramenta que busca arquivar projetos feitos dentro da institui
    ```bash
    php artisan migrate
    
+## Configuração de Login via GitHub
+
+# 1. Criar OAuth Application
+
+1. Acesse [GitHub Developer Settings](https://github.com/settings/developers)
+2. Clique em "New OAuth App"
+3. Configure:
+   - Name: `Legado`
+   - Homepage: `http://localhost:8000`
+   - Callback: `http://localhost:8000/auth/github/callback`
+
+# 2. Configurar Ambiente
+
+Adicione ao `.env`:
+```env
+GITHUB_CLIENT_ID=seu_id_aqui
+GITHUB_CLIENT_SECRET=seu_secret_aqui
+GITHUB_REDIRECT=http://localhost:8000/auth/github/callback
+
+    
