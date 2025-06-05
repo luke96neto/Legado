@@ -38,16 +38,16 @@ O Legado é uma ferramenta que busca arquivar projetos feitos dentro da institui
    
 ## Configuração de Login via GitHub
 
-# 1. Criar OAuth Application
+1. Criar OAuth Application
 
-1. Acesse [GitHub Developer Settings](https://github.com/settings/developers)
-2. Clique em "New OAuth App"
-3. Configure:
+1.1 Acesse [GitHub Developer Settings](https://github.com/settings/developers)
+1.2 Clique em "New OAuth App"
+1.3 Configure:
    - Name: `Legado`
    - Homepage: `http://localhost:8000`
    - Callback: `http://localhost:8000/auth/github/callback`
 
-# 2. Configurar Ambiente
+2. Configurar Ambiente
 
 Adicione ao `.env`:
 ```env
