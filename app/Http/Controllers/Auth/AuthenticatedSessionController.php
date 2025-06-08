@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use Illuminate\Support\Str;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -49,4 +52,82 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+
+    public function handleSocialiteCallback($providerUser, string $provider)
+    {
+        // Verifica se já existe usuário com este email 
+        $userByEmail = User::where('email', $providerUser->getEmail())->first();
+
+        // Verifica se já existe usuário com este ID do provedor
+        $userByProviderId = User::where("{$provider}_id", $providerUser->getId())->first();
+
+        // Caso 1: Usuário já está vinculado a este provedor - faz login
+        if ($userByProviderId) {
+            Auth::login($userByProviderId, true);
+            return redirect()->intended('/dashboard');
+        }
+
+        // Caso 2: Email já existe mas não está vinculado a este provedor
+        if ($userByEmail && !$userByProviderId) {
+            // Aqui você pode:
+            // 1. Pedir confirmação para vincular o provedor
+            // 2. Automaticamente vincular (como no exemplo abaixo)
+
+            $userByEmail->update([
+                "{$provider}_id" => $providerUser->getId(),
+                "{$provider}_token" => $providerUser->token,
+                "{$provider}_refresh_token" => $providerUser->refreshToken,
+            ]);
+
+            Auth::login($userByEmail, true);
+            return redirect()->intended('/dashboard');
+        }
+
+        // Caso 3: Novo usuário
+        $user = User::create([
+            'name' => $providerUser->getName() ?? $providerUser->getNickname(),
+            'email' => $providerUser->getEmail(),
+            "{$provider}_id" => $providerUser->getId(),
+            "{$provider}_token" => $providerUser->token,
+            "{$provider}_refresh_token" => $providerUser->refreshToken,
+            'password' => bcrypt(Str::random(32)), // Senha aleatória segura
+        ]);
+
+        Auth::login($user, true);
+        return redirect()->intended('/dashboard');
+    }
+
+    public function githubRedirect()
+    {
+        return Socialite::driver('github')->redirect();
+    }
+
+    public function githubCallback()
+    {
+        try {
+            $githubUser = Socialite::driver('github')->stateless()->user();
+            return $this->handleSocialiteCallback($githubUser, 'github');
+        } catch (\Exception $e) {
+            \Log::error('GitHub Auth Error: '.$e->getMessage());
+            return redirect()->route('login')->withErrors('Falha na autenticação com GitHub');
+        }
+    }
+
+    // Métodos similares para Google
+    public function googleRedirect()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function googleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+            return $this->handleSocialiteCallback($googleUser, 'google');
+        } catch (\Exception $e) {
+            \Log::error('Google Auth Error: '.$e->getMessage());
+            return redirect()->route('login')->withErrors('Falha na autenticação com Google');
+        }
+    }
+
 }

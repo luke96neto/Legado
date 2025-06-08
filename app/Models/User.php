@@ -20,7 +20,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password', // será opcional
+        'github_id',
+        'google_id',
     ];
 
     /**
@@ -45,4 +47,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
 }

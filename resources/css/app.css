@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-gradient {
+    background: #460D43;
+    background: linear-gradient(90deg, rgba(70, 13, 67, 1) 0%, rgba(163, 102, 157, 1) 100%);
+}
+
+.avatar-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+  }
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #2e2e2e;
+  }
+  .avatar-upload-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #1db954;
+    border-radius: 50%;
+    padding: 6px;
+    cursor: pointer;
+  }
+  .camera-icon {
+    font-size: 16px;
+    color: white;
+  }
