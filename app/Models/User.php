@@ -48,4 +48,12 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Get the user profile associated with the user.
+     */
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
 }
