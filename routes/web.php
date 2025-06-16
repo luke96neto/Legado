@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -11,11 +12,17 @@ Route::get('/', function () {
     ]);
 })->name('welcome');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::prefix('project')->group(function () {
+        Route::get('/', [ProjectController::class, 'index'])->name('project.index');
+        Route::get('/create', [ProjectController::class, 'create'])->name('project.create');
+        Route::get('/{project}', [ProjectController::class, 'show'])->name('project.show');
+        Route::post('/store', [ProjectController::class, 'store'])->name('project.store');
+    });
+    Route::get('/dashboard', function(){
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_profiles', function (Blueprint $table) {
+        Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->unique()->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('github_profile')->nullable();
-            $table->string('phone')->nullable();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->string('status')->default('Em andamento');
+            $table->string('image')->nullable();
+            $table->string('repo_url')->nullable()->unique();
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_profiles');
+        Schema::dropIfExists('projects');
     }
 };

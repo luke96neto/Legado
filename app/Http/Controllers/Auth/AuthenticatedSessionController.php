@@ -69,9 +69,6 @@ class AuthenticatedSessionController extends Controller
 
         // Caso 2: Email já existe mas não está vinculado a este provedor
         if ($userByEmail && !$userByProviderId) {
-            // Aqui você pode:
-            // 1. Pedir confirmação para vincular o provedor
-            // 2. Automaticamente vincular (como no exemplo abaixo)
 
             $userByEmail->update([
                 "{$provider}_id" => $providerUser->getId(),
@@ -84,14 +81,17 @@ class AuthenticatedSessionController extends Controller
         }
 
         // Caso 3: Novo usuário
-        $user = User::create([
-            'name' => $providerUser->getName() ?? $providerUser->getNickname(),
-            'email' => $providerUser->getEmail(),
-            "{$provider}_id" => $providerUser->getId(),
-            "{$provider}_token" => $providerUser->token,
-            "{$provider}_refresh_token" => $providerUser->refreshToken,
-            'password' => bcrypt(Str::random(32)), // Senha aleatória segura
-        ]);
+        $user = User::updateOrCreate(
+            [
+                'name' => $providerUser->getName() ?? $providerUser->getNickname(),
+                'email' => $providerUser->getEmail(),
+                "{$provider}_id" => $providerUser->getId(),
+                "{$provider}_token" => $providerUser->token,
+                "{$provider}_refresh_token" => $providerUser->refreshToken,
+                'password' => bcrypt(Str::random(32)),
+                'email_verified_at' => now()
+            ]
+        );
 
         Auth::login($user, true);
         return redirect()->intended('/dashboard');
@@ -108,7 +108,7 @@ class AuthenticatedSessionController extends Controller
             $githubUser = Socialite::driver('github')->stateless()->user();
             return $this->handleSocialiteCallback($githubUser, 'github');
         } catch (\Exception $e) {
-            \Log::error('GitHub Auth Error: '.$e->getMessage());
+            \Log::error('GitHub Auth Error: ' . $e->getMessage());
             return redirect()->route('login')->withErrors('Falha na autenticação com GitHub');
         }
     }
@@ -125,9 +125,8 @@ class AuthenticatedSessionController extends Controller
             $googleUser = Socialite::driver('google')->stateless()->user();
             return $this->handleSocialiteCallback($googleUser, 'google');
         } catch (\Exception $e) {
-            \Log::error('Google Auth Error: '.$e->getMessage());
+            \Log::error('Google Auth Error: ' . $e->getMessage());
             return redirect()->route('login')->withErrors('Falha na autenticação com Google');
         }
     }
-
 }

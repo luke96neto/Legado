@@ -22,7 +22,11 @@ class User extends Authenticatable
         'email',
         'password', // será opcional
         'github_id',
+        'github_token',
+        'github_refresh_token',
         'google_id',
+        'google_token',
+        'google_refresh_token',
     ];
 
     /**
@@ -56,4 +60,8 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
+    public function authoredProjects()
+    {
+        return $this->hasMany(Author::class); // Lista todos os registros em 'authors' vinculados ao usuário
+    }
 }
