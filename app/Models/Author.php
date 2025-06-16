@@ -20,12 +20,8 @@ class Author extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Relação com Project
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
-
-
-    
 }
