@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'nickname',
         'password', // será opcional
         'github_id',
         'github_token',
@@ -60,8 +61,8 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
-    public function authoredProjects()
+    public function projects()
     {
-        return $this->hasMany(Author::class); // Lista todos os registros em 'authors' vinculados ao usuário
+        return $this->hasMany(Project::class);
     }
 }

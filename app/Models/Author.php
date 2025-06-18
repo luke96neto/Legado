@@ -11,7 +11,7 @@ class Author extends Model
 
     protected $fillable = [
         'user_id',
-        'project_id',
+        'slug',
         'name', 
     ];
 
@@ -22,6 +22,6 @@ class Author extends Model
 
     public function project()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsToMany(Project::class, 'project_author');
     }
 }
