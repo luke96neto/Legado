@@ -15,21 +15,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::factory()->count(10)->create();
+        $users = User::factory(10)->create();
 
-        $projects = Project::factory()->count(15)->create();
+        $authors = Author::factory(15)
+            ->create()
+            ->concat(
+                Author::factory(5)
+                    ->withoutUser()
+                    ->create()
+            );
 
-        $projects->each(function ($project) use ($users) {
-            $selectedUsers = $users->random(2);
-
-            $selectedUsers->each(function ($user) use ($project) {
-                Author::create([
-                    'user_id' => $user->id,
-                    'project_id' => $project->id,
-                    'name' => $user->name
-                ]);
+        Project::factory(30)
+            ->create()
+            ->each(function ($project) use ($authors) {
+                $project->authors()->attach(
+                    $authors->random(rand(1, 3))->pluck('id')
+                );
             });
-        });
-
     }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Database\Factories;
 
@@ -11,9 +11,17 @@ class AuthorFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => User::factory(),
-            'project_id' => Project::factory(),
-            'name' => $this->faker->name(),
+            'user_id' => fn() => User::factory()->create()->id,
+            'name' => fake()->name(),
+            'slug' => fake()->unique()->slug(),
+            'bio' => fake()->paragraph(),
         ];
+    }
+
+    public function withoutUser(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'user_id' => null,
+        ]);
     }
 }

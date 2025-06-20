@@ -25,10 +25,16 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'nickname' => fake()->unique()->userName(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'password' => bcrypt('password'),
+            'google_id' => fake()->optional()->numerify('###########'),
+            'google_token' => fake()->optional()->md5(),
+            'google_refresh_token' => fake()->optional()->md5(),
+            'github_id' => fake()->optional()->numerify('###########'),
+            'github_token' => fake()->optional()->md5(),
+            'github_refresh_token' => fake()->optional()->md5(),
+            'email_verified_at' => now()
         ];
     }
 
