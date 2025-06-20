@@ -81,10 +81,12 @@ class AuthenticatedSessionController extends Controller
         }
 
         // Caso 3: Novo usuário
-        $user = User::updateOrCreate(
-            [
-                'name' => $providerUser->getName() ?? $providerUser->getNickname(),
+        $user = User::updateOrCreate([
                 'email' => $providerUser->getEmail(),
+            ],
+            [
+                'name' => $providerUser->getName(),
+                'nickname' => $providerUser->getNickname() ?? Str::slug($providerUser->getName()),
                 "{$provider}_id" => $providerUser->getId(),
                 "{$provider}_token" => $providerUser->token,
                 "{$provider}_refresh_token" => $providerUser->refreshToken,
