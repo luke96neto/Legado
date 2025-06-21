@@ -13,7 +13,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::with('authors')->get();
+        $projects = Project::with('authors')->latest()->paginate(15);
+
         return Inertia::render('Project/Index', [
             'projects' => $projects,
         ]);
