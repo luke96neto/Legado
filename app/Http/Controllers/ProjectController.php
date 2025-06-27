@@ -39,8 +39,10 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show($slug)
     {
+
+        $project = Project::where('slug', $slug)->first();
         $project->load('authors');
         
         return Inertia::render('Project/Show', [
