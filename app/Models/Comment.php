@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Author extends Model
+class Comment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'content',
         'user_id',
-        'slug',
-        'name', 
+        'project_id',
     ];
 
     public function user()
@@ -20,8 +20,8 @@ class Author extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function projects()
+    public function project()
     {
-        return $this->belongsToMany(Project::class, 'project_author');
+        return $this->belongsTo(Project::class);
     }
 }

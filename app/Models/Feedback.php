@@ -5,14 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Author extends Model
+class Feedback extends Model
 {
+    protected $table = 'feedbacks';
+    
     use HasFactory;
 
     protected $fillable = [
+        'rating',
         'user_id',
-        'slug',
-        'name', 
+        'project_id',
     ];
 
     public function user()
@@ -20,8 +22,8 @@ class Author extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function projects()
+    public function project()
     {
-        return $this->belongsToMany(Project::class, 'project_author');
+        return $this->belongsTo(Project::class);
     }
 }
