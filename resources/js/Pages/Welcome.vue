@@ -1,5 +1,6 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 defineProps({
     canLogin: {
@@ -9,41 +10,63 @@ defineProps({
         type: Boolean,
     },
 });
-</script>
 
+const navbar = ref(null)
+const scrolled = ref(false)
+
+const handleScroll = () => {
+    scrolled.value = window.scrollY > 50
+}
+
+onMounted(() => {
+    window.addEventListener('scroll', handleScroll)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll)
+})
+</script>
 <template>
 
     <Head title="Welcome" />
-    <div class="bg-gradient">
-        <div
-            class="relative flex min-h-screen flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
-            <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
-                <header class="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
-                    <div class="flex lg:col-start-2 lg:justify-center">
-                        <img src="..\..\..\public\img\image_29-removebg-preview.png" alt="">
-                    </div>
-                    <nav v-if="canLogin" class="-mx-3 flex flex-1 justify-end">
-                        <Link v-if="$page.props.auth.user" :href="route('dashboard')"
-                            class="border rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                        Dashboard
-                        </Link>
-
-                        <template v-else>
-                            <Link :href="route('login')"
-                                class="border rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                            Login/cadastro  ->
-                            </Link>
-                        </template>
-                    </nav>
-                </header>
-
-                <main class="mt-6">
-                    
-                </main>
-
-                <footer class="py-16 text-center text-sm text-black dark:text-white/70">
-                </footer>
+    <div class="bg-[#170423] relative">
+        <div class="absolute inset-0 overflow-hidden h-[2064px]">
+            <div class="w-full">
+                <img src="/img/landingimg.png" alt="Background" class="w-full object-cover object-center">
             </div>
+        </div>
+        <nav ref="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" :class="{
+            'py-4 bg-[#11021b]': scrolled,
+            'py-6 bg-transparent': !scrolled
+        }">
+            <div class="flex justify-between mx-[47px]">
+                <img src="/img/logo-legado-wname.png" class="w-[173.5px] h-[59px]" alt="">
+                <Link v-if="$page.props.auth.user" :href="route('dashboard')"
+                    class="w-40 h-10 text-center py-2 m-2 rounded-lg font-extrabold text-black bg-white hover:bg-gray-100 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Dashboard
+                </Link>
+                <Link v-else :href="route('login')"
+                    class="w-40 h-10 text-center py-2 m-2 rounded-lg font-extrabold text-black bg-white hover:bg-gray-100 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Entrar ->
+                </Link>
+            </div>
+        </nav>
+
+        <div class="relative pt-[150px]">
+ <main class="h-[5000px]">
+                <div class="w-[65%] ml-[17%] mt-[14%]">
+                    <h1 class="font-extrabold text-center text-[64px] text-white leading-[63px] -tracking-[1.2px]">Explore. Aprenda. Inspire-se. O Legado conecta gerações através do conhecimento.</h1>
+                    <p class=" text-[#C5C5C5] italic text-center text-[32px]">Construímos pontes entre o passado e o futuro, porque o conhecimento só se multiplica quando é compartilhado.</p>
+                    <div class="flex justify-center  mt-[12%] h-[40px]">
+                        <Link :href="route('login')"
+                            class="w-[150px] py-1.5 text-center rounded-lg font-extrabold text-black bg-white hover:bg-gray-100 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Criar conta ->
+                        </Link>
+                    </div>
+                </div>
+            </main>
+            <footer class="py-16 text-center text-sm text-white/70">
+            </footer>
         </div>
     </div>
 </template>
