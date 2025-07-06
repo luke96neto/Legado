@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Author;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,7 +14,10 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::with('authors')->latest()->paginate(15);
+        $projects = Project::with('authors', 'feedbacks', 'tags')
+                    ->withAvg('feedbacks', 'rating')
+                    ->latest()
+                    ->paginate(15);
 
         return Inertia::render('Project/Index', [
             'projects' => $projects,
@@ -33,7 +37,28 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:rascunho,em_andamento,concluido',
+            'image' => 'nullable|image|max:10240',
+            'repo_url' => 'nullable|url'
+        ]);
         
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('project-images', 'public');
+        }
+
+        $author = Author::firstOrCreate([
+            'user_id' => $request->user()->id,
+        ], [
+            'name' => $request->user()->nickname,
+        ]);
+
+        $project = $request->user()->projects()->create($validated);
+        $project->authors()->attach($author->id);
+
+        return redirect()->route('project.show', $project['slug']);
     }
 
     /**

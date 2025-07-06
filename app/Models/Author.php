@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Author extends Model
 {
@@ -12,8 +13,21 @@ class Author extends Model
     protected $fillable = [
         'user_id',
         'slug',
-        'name', 
+        'name',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($author) {
+            $author->slug = Str::slug($author->name);
+        });
+
+        static::updating(function ($author) {
+            $author->slug = Str::slug($author->name);
+        });
+    }
 
     public function user()
     {

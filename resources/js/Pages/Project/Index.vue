@@ -56,6 +56,43 @@ defineProps({
                                     </span>
                                 </div>
                             </div>
+                            <div class="mt-3 border-t pt-3">
+                                <p class="text-sm text-gray-500">Tags:</p>
+                                <div v-if="project.tags.length > 0" class="flex flex-wrap gap-2 mt-2">
+                                    <span 
+                                        v-for="tag in project.tags" 
+                                        :key="tag.id"
+                                        class="text-xs px-3 py-1 rounded-full"
+                                        :style="{
+                                            'background-color': `${tag.color}20`, 
+                                            'color': tag.color,
+                                        }"
+                                    >
+                                        {{ tag.name }}
+                                    </span>
+                                </div>
+                                <div v-else class="flex flex-wrap gap-2 mt-2">
+                                    <span 
+                                        class="text-gray-500 text-sm"
+                                    >
+                                        Sem tags
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mt-3 border-t pt-3">
+                                <p class="text-sm text-gray-500">Avaliação Média:</p>
+                                <div class="flex items-center mt-2">
+                                    <span 
+                                        v-if="project.feedbacks_avg_rating"
+                                        class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full"
+                                    >
+                                        {{ Math.round(project.feedbacks_avg_rating * 10) / 10 }} ★
+                                    </span>
+                                    <span v-else class="text-gray-500 text-sm">
+                                        Sem avaliações
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </Link>
                 </li>

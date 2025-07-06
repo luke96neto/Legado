@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
     project: Object,
@@ -26,11 +26,10 @@ defineProps({
                 <p class="text-gray-600 mb-3">
                     <span class="text-blue-600">Descrição:</span> {{ project.description }}
                 </p>
-                <p class="text-sm mb-4">
-                    <span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                        {{ project.status }}
-                    </span>
-                </p>
+                <div v-if="project.image">
+                    <p>Imagem do projeto:</p>
+                    <img class="m-3" :src="`/storage/${project.image}`" alt="Imagem do projeto">
+                </div>
 
                 <div class="border-t pt-3">
                     <p class="text-sm text-gray-500">Autores:</p>
@@ -38,6 +37,24 @@ defineProps({
                         <span v-for="author in project.authors" :key="author.id"
                             class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">
                             {{ author.name }}
+                        </span>
+                    </div>
+                </div>
+                <div class="mt-2 border-t pt-3">
+                    <p class="text-sm text-gray-500">Link repositório:</p>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        <a :href="project.repo_url" target="_blank"
+                            class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">
+                            {{ project.repo_url }}
+                        </a>
+                    </div>
+                </div>
+                <div class="mt-2 border-t pt-3">
+                    <p class="text-sm text-gray-500">Status:</p>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        <span v-for="author in project.authors" :key="author.id"
+                            class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">
+                            {{ project.status }}
                         </span>
                     </div>
                 </div>
