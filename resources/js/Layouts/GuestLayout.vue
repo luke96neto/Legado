@@ -6,7 +6,7 @@ import { Link } from '@inertiajs/vue3';
 <template>
     <div class="flex min-h-screen flex-col items-center bg-gradient pt-6 sm:justify-center sm:pt-0 ">
         <div>
-            <img src="..\..\..\public\img\image_29-removebg-preview.png" alt="">
+            <img src="..\..\..\public\img\logoimg.png" alt="">
         </div>
 
         <div
