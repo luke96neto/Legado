@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
                     <h1 class="font-extrabold text-center text-[64px] text-white leading-[63px] -tracking-[1.2px]">Explore. Aprenda. Inspire-se. O Legado conecta gerações através do conhecimento.</h1>
                     <p class=" text-[#C5C5C5] italic text-center text-[32px]">Construímos pontes entre o passado e o futuro, porque o conhecimento só se multiplica quando é compartilhado.</p>
                     <div class="flex justify-center  mt-[12%] h-[40px]">
-                        <Link :href="route('login')"
+                        <Link :href="route('register')"
                             class="w-[150px] py-1.5 text-center rounded-lg font-extrabold text-black bg-white hover:bg-gray-100 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Criar conta ->
                         </Link>
