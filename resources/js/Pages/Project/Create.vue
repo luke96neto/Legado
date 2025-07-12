@@ -75,7 +75,7 @@ onMounted(() => {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+            <h2 class="text-xl font-semibold leading-tight text-gray-300 dark:text-gray-200">
                 Criar Novo Projeto
             </h2>
         </template>
@@ -83,23 +83,23 @@ onMounted(() => {
         <div class="container mx-auto px-4 py-8">
             <form @submit.prevent="submit" class="space-y-6">
                 <div>
-                    <label for="title" class="block text-sm font-medium text-white">Título</label>
+                    <label for="title" class="block text-sm font-medium text-gray-300">Título</label>
                     <input  
                         v-model="form.title"
                         type="text"
                         id="title"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         :class="{ 'border-red-500': form.errors.title }"
                         required 
                     />
                 </div>
 
                 <div>
-                    <label for="description" class="block text-sm font-medium text-white">Descrição</label>
+                    <label for="description" class="block text-sm font-medium text-gray-300">Descrição</label>
                     <textarea
                         v-model="form.description"
                         id="description"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                         :class="{'border-red-500' : form.errors.description}"
                         rows="4" 
                         required>
@@ -107,11 +107,11 @@ onMounted(() => {
                 </div>
 
                 <div>
-                    <label for="status" class="block text-sm font-medium text-white">Status</label>
+                    <label for="status" class="block text-sm font-medium text-gray-300">Status</label>
                     <select 
                         v-model="form.status"
                         id="status"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     >
                         <option value="rascunho">Rascunho</option>
                         <option value="em_andamento">Em andamento</option>
@@ -120,14 +120,14 @@ onMounted(() => {
                 </div>
 
                 <div class="mt-4">
-                    <label for="collaborators" class="block text-sm font-medium text-white">
+                    <label for="collaborators" class="block text-sm font-medium text-gray-300">
                         Autor(es)
                     </label>
                     <input
                         v-model="collaboratorsInput"
                         type="text"
                         id="collaborators"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     >
                     <p v-if="form.errors.authors" class="mt-1 text-sm text-red-500">
                         {{ form.errors.authors }}
@@ -135,15 +135,20 @@ onMounted(() => {
                 </div>
 
                 <div class="">
-                    <label for="img_link" class="block text-sm font-medium text-gray-900 dark:text-white">Imagem do projeto (opcional)</label><br>
+                    <label for="img_link" class="block text-sm font-medium text-gray-600 dark:text-black">Imagem do projeto (opcional)</label><br>
                     <input 
                         type="file"
                         @input="form.image = $event.target.files[0]"
                         accept="image/*" 
-                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" 
+                        class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4
+                        file:rounded file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-purple-600 file:text-white
+                        hover:file:bg-purple-900
+                        bg-gray-300 border border-gray-600 rounded-lg cursor-pointer"
                         id="image"
                     />
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-300" id="file_input_help">PNG, JPG or JPEG (MAX. 10mb).</p>
+                    <p class="mt-1 text-xs text-gray-600 dark:text-gray-300" id="file_input_help">PNG, JPG or JPEG (MAX. 10mb).</p>
                     <p v-if="form.errors.image" class="mt-1 text-sm text-red-500">
                         {{ form.errors.image }}
                     </p>
@@ -151,12 +156,12 @@ onMounted(() => {
                 
                 <div class="flex gap-4 justify-between">
                     <div class="w-full">
-                        <label for="repo_url" class="block text-sm font-medium text-white">URL do repositório</label>
+                        <label for="repo_url" class="block text-sm font-medium text-gray-300">URL do repositório</label>
                         <input 
                             v-model="form.repo_url"
                             type="url" 
                             id="repo_url"
-                            class="mt-1 w-full block border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            class="mt-1 w-full bg-gray-300 block border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             :class="{ 'border-red-500': form.errors.repo_url }"
                             placeholder="https://github.com/usuario/projeto"
                         >
@@ -165,11 +170,11 @@ onMounted(() => {
                         </p>
                     </div>
                     <div class="w-full">
-                        <label for="select_repo" class="block text-sm font-medium text-white">Selecionar repositório</label>
+                        <label for="select_repo" class="block text-sm font-medium text-gray-300">Selecionar repositório</label>
                         <select 
                             v-model="selectedRepo"
                             id="select_repo"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             >
                             <option :value="null">Selecione um repositório</option>
                             <option v-for="repo in repositories" :key="repo.id" :value="repo">
@@ -180,7 +185,7 @@ onMounted(() => {
                 </div>
                 <button 
                     type="submit"
-                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                    class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-900 transition-colors"
                     :disabled="form.processing"
                 >
                     <span v-if="form.processing">Enviando...</span>
