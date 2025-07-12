@@ -101,13 +101,13 @@ class AuthenticatedSessionController extends Controller
 
     public function githubRedirect()
     {
-        return Socialite::driver('github')->redirect();
+        return Socialite::driver('github')->setScopes(['user:email', 'repo'])->redirect();
     }
 
     public function githubCallback()
     {
         try {
-            $githubUser = Socialite::driver('github')->stateless()->user();
+            $githubUser = Socialite::driver('github')->setScopes(['user:email', 'repo'])->stateless()->user();
             return $this->handleSocialiteCallback($githubUser, 'github');
         } catch (\Exception $e) {
             \Log::error('GitHub Auth Error: ' . $e->getMessage());
@@ -118,13 +118,13 @@ class AuthenticatedSessionController extends Controller
     // Métodos similares para Google
     public function googleRedirect()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')->setScopes(['user:email', 'repo'])->redirect();
     }
 
     public function googleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            $googleUser = Socialite::driver('google')->setScopes(['user:email', 'repo'])->stateless()->user();
             return $this->handleSocialiteCallback($googleUser, 'google');
         } catch (\Exception $e) {
             \Log::error('Google Auth Error: ' . $e->getMessage());

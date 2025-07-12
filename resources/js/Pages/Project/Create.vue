@@ -1,10 +1,53 @@
 <script setup>
+import { ref, onMounted, watch } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+
+const repositories = ref([]);
+const collaborators = ref([]);
+const selectedRepo = ref(null);
+const loadingCollabs = ref(false);
+const collaboratorsInput = ref('');
+
+const loadRepositories = async () => {
+    try {
+        const response = await axios.get('/github/repos');
+        repositories.value = response.data;
+    } catch (error) {
+        console.error('Falha ao carregar os repositorios:', error); // so p testar, adicionar um melhor tratamento dps
+    }
+};
+
+const loadCollaborators = async (repoFullName) => {
+    if (!repoFullName) return;
+    
+    const [owner, repo] = repoFullName.split('/');
+    loadingCollabs.value = true;
+    
+    try {
+        const response = await axios.get(`/github/repos/${owner}/${repo}/collaborators`);
+        collaborators.value = response.data;
+        collaboratorsInput.value = response.data.map(c => c.login).join(', ');
+    } catch (error) {
+        console.error('Error loading collaborators:', error);
+    } finally {
+        loadingCollabs.value = false;
+    }
+};
+
+watch(selectedRepo, (newRepo) => {
+    if (newRepo) {
+        form.title = newRepo.name;
+        form.description = newRepo.description;
+        form.repo_url = newRepo.html_url;
+        loadCollaborators(newRepo.full_name);
+    }
+});
 
 const form = useForm({
     title: '',
     description: '',
+    authors: '',
     status: 'rascunho',
     image: null,
     repo_url: ''
@@ -20,6 +63,11 @@ const submit = () => {
         }
     });
 };
+
+onMounted(() => {
+    loadRepositories();
+});
+
 </script>
 
 <template>
@@ -71,8 +119,23 @@ const submit = () => {
                     </select>
                 </div>
 
+                <div class="mt-4">
+                    <label for="collaborators" class="block text-sm font-medium text-white">
+                        Autor(es)
+                    </label>
+                    <input
+                        v-model="collaboratorsInput"
+                        type="text"
+                        id="collaborators"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    >
+                    <p v-if="form.errors.authors" class="mt-1 text-sm text-red-500">
+                        {{ form.errors.authors }}
+                    </p>
+                </div>
+
                 <div class="">
-                    <label for="img_link" class="block text-sm font-medium text-gray-900 dark:text-white">Imagem do projeto (opcional): </label><br>
+                    <label for="img_link" class="block text-sm font-medium text-gray-900 dark:text-white">Imagem do projeto (opcional)</label><br>
                     <input 
                         type="file"
                         @input="form.image = $event.target.files[0]"
@@ -86,21 +149,35 @@ const submit = () => {
                     </p>
                 </div>
                 
-                <div>
-                    <label for="repo_url" class="block text-sm font-medium text-white">URL do repositório:</label>
-                    <input 
-                        v-model="form.repo_url"
-                        type="url" 
-                        id="repo_url"
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        :class="{ 'border-red-500': form.errors.repo_url }"
-                        placeholder="https://github.com/usuario/projeto"
-                    />
-                    <p v-if="form.errors.repo_url" class="mt-1 text-sm text-red-500">
-                        {{ form.errors.repo_url }}
-                    </p>
+                <div class="flex gap-4 justify-between">
+                    <div class="w-full">
+                        <label for="repo_url" class="block text-sm font-medium text-white">URL do repositório</label>
+                        <input 
+                            v-model="form.repo_url"
+                            type="url" 
+                            id="repo_url"
+                            class="mt-1 w-full block border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            :class="{ 'border-red-500': form.errors.repo_url }"
+                            placeholder="https://github.com/usuario/projeto"
+                        >
+                        <p v-if="form.errors.repo_url" class="mt-1 text-sm text-red-500">
+                            {{ form.errors.repo_url }}
+                        </p>
+                    </div>
+                    <div class="w-full">
+                        <label for="select_repo" class="block text-sm font-medium text-white">Selecionar repositório</label>
+                        <select 
+                            v-model="selectedRepo"
+                            id="select_repo"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            >
+                            <option :value="null">Selecione um repositório</option>
+                            <option v-for="repo in repositories" :key="repo.id" :value="repo">
+                                {{ repo.name }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
-
                 <button 
                     type="submit"
                     class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
