@@ -40,6 +40,7 @@ watch(selectedRepo, (newRepo) => {
         form.title = newRepo.name;
         form.description = newRepo.description;
         form.repo_url = newRepo.html_url;
+        form.authors = collaboratorsInput;
         loadCollaborators(newRepo.full_name);
     }
 });

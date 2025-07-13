@@ -56,12 +56,23 @@ class ProjectController extends Controller
         $author = Author::firstOrCreate([
             'user_id' => $request->user()->id,
         ], [
-            'name' => $request->user()->name ?? 'Nome do Autor', // Use 'name' ou o campo correto do seu User
-            'slug' => \Illuminate\Support\Str::slug($request->user()->name ?? 'Nome do Autor'), // Slug é obrigatório
+            'name' => $request->user()->nickname
         ]);
-
+        
         $project = $request->user()->projects()->create($validated);
         $project->authors()->attach($author->id);
+
+        $authorlist = array_map('trim', explode(',', $request['authors']));
+        $authorlist = array_diff($authorlist, [$request->user()->nickname]);
+        
+        foreach ($authorlist as $name) {
+            $addauthor = Author::firstOrCreate([
+                'name' => $name
+            ],[
+                'name' => $name
+            ]);
+            $project->authors()->attach($addauthor->id);
+        }
 
         return redirect()->route('project.show', $project->slug); // Use $project->slug para a rota
     }
