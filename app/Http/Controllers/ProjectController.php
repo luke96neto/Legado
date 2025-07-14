@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Feedback;
 use App\Models\Author;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth; // Importe a Facade Auth
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -16,8 +17,7 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::with('authors', 'feedbacks', 'tags')
-                            // Se 'feedbacks' for a tabela de ratings, use ratings em vez de feedbacks
-                            ->withAvg('ratings', 'rating') // Assume que 'ratings' é o nome da relação e 'rating' a coluna
+                            ->withAvg('feedbacks', 'rating')
                             ->latest()
                             ->paginate(15);
 
@@ -51,8 +51,6 @@ class ProjectController extends Controller
             $validated['image'] = $request->file('image')->store('project-images', 'public');
         }
 
-        // Verifique se 'nickname' existe no seu objeto user
-        // Ou ajuste para user()->name se for o caso
         $author = Author::firstOrCreate([
             'user_id' => $request->user()->id,
         ], [
@@ -82,29 +80,16 @@ class ProjectController extends Controller
      */
     public function show($slug)
     {
-        // Encontra o projeto pelo slug
-        $project = Project::where('slug', $slug)->firstOrFail(); // Use firstOrFail para 404 se não encontrar
 
-        // Carrega os autores, que você já estava fazendo
+        $project = Project::where('slug', $slug)->firstOrFail();
+
         $project->load('authors');
+        $project->load('feedbacks')->where('user_id', Auth::id());
 
-        // Carrega a avaliação do usuário logado para este projeto, se houver
-        // 'ratings' deve ser o nome do relacionamento no seu modelo Project
-        // Auth::id() pega o ID do usuário atualmente logado
-        $project->load(['ratings' => function ($query) {
-            $query->where('user_id', Auth::id());
-        }]);
-
-        // Calcula a média e a contagem de avaliações para passar ao Vue
-        // Estes métodos (averageRating, ratingsCount) devem estar no seu modelo Project
         $averageRating = $project->averageRating();
         $ratingsCount = $project->ratingsCount();
+        $userRating = $project->userRating(Auth::id());
 
-        // Pega a avaliação específica do usuário logado para este projeto
-        // 'first()' retornará o objeto Rating ou null se o usuário ainda não avaliou
-        $userRating = $project->ratings->first();
-
-        // Renderiza o componente Inertia 'Project/Show' e passa as props
         return Inertia::render('Project/Show', [
             'project' => [
                 'id' => $project->id,
@@ -113,13 +98,12 @@ class ProjectController extends Controller
                 'image' => $project->image,
                 'repo_url' => $project->repo_url,
                 'status' => $project->status,
-                'authors' => $project->authors, // Já carregado acima
+                'authors' => $project->authors,
                 'slug' => $project->slug,
-
-                // Adicione as props de avaliação aqui
+                
                 'average_rating' => $averageRating,
                 'ratings_count' => $ratingsCount,
-                'user_rating' => $userRating, // O objeto Rating completo ou null
+                'user_rating' => $userRating,
             ],
         ]);
     }

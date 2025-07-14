@@ -11,7 +11,6 @@ const props = defineProps({
 const page = usePage(); // Hook para acessar as props globais do Inertia (como auth.user e flash)
 
 // Lógica para obter a avaliação atual do usuário, se existir
-// O Laravel precisa passar 'user_rating' dentro do objeto 'project'
 const currentUserRating = props.project.user_rating ? props.project.user_rating.rating : 0;
 
 // Lógica para verificar se o usuário está logado
@@ -71,9 +70,9 @@ const userIsLoggedIn = !!page.props.auth.user;
 
                 <hr class="my-6">
 
-                <h3 class="text-xl font-semibold mb-3">Avaliações</h3>
+                <h3 class="text-xl text-white font-semibold mb-3">Avaliações</h3>
                 <template v-if="project.ratings_count > 0">
-                    <p class="text-lg mb-2">Média de Avaliações:
+                    <p class="text-lg text-white mb-2">Média de Avaliações:
                         <strong class="text-yellow-500">
                             {{ parseFloat(project.average_rating).toFixed(1) }}
                             <i class="fa-solid fa-star"></i>
@@ -86,7 +85,7 @@ const userIsLoggedIn = !!page.props.auth.user;
                 </template>
 
                 <template v-if="userIsLoggedIn">
-                    <h4 class="text-lg font-semibold mt-6 mb-3">Sua Avaliação:</h4>
+                    <h4 class="text-lg text-white font-semibold mt-6 mb-3">Sua Avaliação:</h4>
                     <star-rating :project-id="project.id" :current-rating="currentUserRating"></star-rating>
                 </template>
                 <template v-else>

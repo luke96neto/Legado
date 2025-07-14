@@ -13,59 +13,45 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
-import axios from 'axios'; // Ou use fetch
+import axios from 'axios';
 
-export default {
-    props: {
-        projectId: {
-            type: Number,
-            required: true,
-        },
-        currentRating: {
-            type: Number,
-            default: 0,
-        },
+const props = defineProps({
+    projectId: {
+        type: Number,
+        required: true,
     },
-    setup(props) {
-        const rating = ref(props.currentRating);
-        const previewRating = ref(0);
-
-        const setRating = async (newRating) => {
-            rating.value = newRating;
-
-            try {
-                const url = props.currentRating > 0
-                    ? `/project/${props.projectId}/rate` // Rota de atualização
-                    : `/project/${props.projectId}/rate`; // Rota de criação
-
-                const method = props.currentRating > 0 ? 'put' : 'post';
-
-                const response = await axios({
-                    method: method,
-                    url: url,
-                    data: { rating: newRating },
-                });
-
-                if (response.data.success) {
-                    window.location.reload(); // Recarrega a página para mostrar a nova média (simplificado)
-                } else {
-                    console.error('Erro ao salvar a avaliação:', response.data);
-                    alert('Erro ao salvar a avaliação.');
-                }
-            } catch (error) {
-                console.error('Erro na requisição:', error);
-                alert('Erro na requisição para salvar a avaliação.');
-            }
-        };
-
-        return {
-            rating,
-            previewRating,
-            setRating,
-        };
+    currentRating: {
+        type: Number,
+        default: 0,
     },
+});
+
+const rating = ref(props.currentRating);
+const previewRating = ref(0);
+
+const setRating = async (newRating) => {
+    rating.value = newRating;
+
+    try {
+        const response = await axios.post(`/project/${props.projectId}/rate`, {
+            rating: newRating
+        });
+
+        if (response.data.success) {
+            window.location.reload();
+        } else {
+            alert(response.data.error); 
+            rating.value = props.currentRating;
+        }
+    } catch (error) {
+        if (error.response && error.response.data.error) {
+            alert(error.response.data.error);
+        } else {
+            alert('Erro desconhecido ao salvar a avaliação.');
+        }
+    }
 };
 </script>
 

@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\RatingController;
+use App\Models\Feedback;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -29,9 +31,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('/user-profile', UserProfileController::class)
         ->only(['store', 'show', 'update']);
-    Route::post('/project/{project}/rate', [RatingController::class, 'store'])
+    Route::post('/project/{id}/rate', [FeedbackController::class, 'store'])
         ->name('project.rate');
-    Route::put('/project/{project}/rate', [RatingController::class, 'update'])
+    Route::put('/project/{project}/rate', [FeedbackController::class, 'update'])
         ->name('project.rate.update');
 });
 

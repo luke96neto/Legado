@@ -58,43 +58,23 @@ class Project extends Model
         return $this->belongsToMany(Tag::class, 'project_tag')->withTimestamps();
     }
 
-    # TESTE DAQUI PARA BAIXO
-
-    public function ratings()
-    {
-        return $this->hasMany(Rating::class);
-    }
-
-    /**
-     * Calcula a média das avaliações para este post.
-     * Retorna um float (ex: 3.75).
-     */
     public function averageRating()
     {
-        return $this->ratings()->avg('rating');
+        return $this->feedbacks()->avg('rating');
     }
 
-    /**
-     * Retorna a contagem total de avaliações para este post.
-     */
     public function ratingsCount()
     {
-        return $this->ratings()->count();
+        return $this->feedbacks()->count();
     }
 
-    /**
-     * Verifica se um usuário específico já avaliou este post.
-     */
     public function hasUserRated($userId)
     {
-        return $this->ratings()->where('user_id', $userId)->exists();
+        return $this->feedbacks()->where('user_id', $userId)->exists();
     }
 
-    /**
-     * Retorna a avaliação (objeto Rating) de um usuário específico para este post.
-     */
     public function userRating($userId)
     {
-        return $this->ratings()->where('user_id', $userId)->first();
+        return $this->feedbacks()->where('user_id', $userId)->first();
     }
 }

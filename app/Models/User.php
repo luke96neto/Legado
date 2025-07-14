@@ -75,9 +75,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
-
-    public function ratings()
-    {
-        return $this->hasMany(Rating::class);
-    }
 }
