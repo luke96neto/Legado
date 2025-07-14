@@ -113,15 +113,37 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        $tags = \App\Models\Tag::all();
+        $project->load('tags');
+        return Inertia::render('Project/Edit', [
+            'project' => $project,
+            'tags' => $tags
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project)
+    public function update(\App\Http\Requests\ProjectUpdateRequest $request, Project $project)
     {
-        //
+        $validated = $request->validated();
+
+        // Atualiza os dados do projeto
+        $project->fill($validated);
+
+        // Atualiza a tag do projeto, se fornecida
+        if (isset($validated['tag_id'])) {
+            $project->tags()->sync([$validated['tag_id']]);
+        }
+
+        // Atualiza imagem se fornecida
+        if ($request->hasFile('image')) {
+            $project->image = $request->file('image')->store('project-images', 'public');
+        }
+
+        $project->save();
+
+        return redirect()->route('project.show', $project->slug)->with('status', 'Projeto atualizado com sucesso!');
     }
 
     /**
