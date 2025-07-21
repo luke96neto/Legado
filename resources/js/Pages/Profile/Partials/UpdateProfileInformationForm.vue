@@ -22,7 +22,7 @@ const form = useForm({
     name: user.name,
     email: user.email,
     nickname: user.nickname,
-    image: user.image,
+    image: null,
 });
 
 const handleImageChange = (e) => {
@@ -33,7 +33,6 @@ const handleImageChange = (e) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             previewImage.value = e.target.result;
-            // Atualiza visualização imediata
             user.image = e.target.result;
         };
         reader.readAsDataURL(file);
@@ -43,8 +42,7 @@ const handleImageChange = (e) => {
 const submit = () => {
     form.transform((data) => ({
         ...data,
-        // Garante que a imagem seja incluída corretamente
-        _method: 'patch' // Laravel precisa disso para métodos PATCH com upload de arquivos
+        _method: 'patch'
     })).post(route('profile.update'), {
         preserveScroll: true,
         onSuccess: () => {
@@ -73,7 +71,6 @@ const submit = () => {
             <div>
                 <label for="image" class="block text-sm font-medium text-white">Foto de perfil</label>
                 
-                <!-- Pré-visualização -->
                 <img v-if="previewImage" :src="previewImage" class="h-20 w-20 rounded-full mb-2 object-cover">
                 <img v-else-if="user.image" :src="'/storage/' + user.image" class="h-20 w-20 rounded-full mb-2 object-cover">
                 

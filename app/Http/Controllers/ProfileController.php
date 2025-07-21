@@ -34,18 +34,16 @@ class ProfileController extends Controller
 
         $user = $request->user();
         $validated = $request->validated();
+        $user->fill($request->safe()->except(['image']));
         
         if ($request->hasFile('image')) {
-            // Se o usuário já tinha uma imagem, deleta a antiga
             if ($user->image) {
                 Storage::disk('public')->delete($user->image);
             }
             
-            // Armazena a nova imagem
-            $validated['image'] = $request->file('image')->store('users-images', 'public');
+            $user->image = $request->file('image')->store('users-images', 'public');
         }
 
-        $user->fill($validated);
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
