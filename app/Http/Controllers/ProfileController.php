@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -27,16 +28,29 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(Request $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        \Log::debug('Dados recebidos controller');
+
         $user = $request->user();
-        $user->fill($request->validated());
+        $validated = $request->validated();
+        $user->fill($request->safe()->except(['image']));
+        
+        if ($request->hasFile('image')) {
+            if ($user->image) {
+                Storage::disk('public')->delete($user->image);
+            }
+            
+            $user->image = $request->file('image')->store('users-images', 'public');
+        }
+
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
         $user->save();
+        \Log::debug('Dados salvos controller');
 
         return Redirect::route('profile.edit');
     }

@@ -2,7 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 
 defineProps({
     mustVerifyEmail: {
@@ -12,6 +12,10 @@ defineProps({
         type: String,
     },
 });
+
+const user = usePage().props.auth.user;
+console.log(user.image);
+
 </script>
 
 <template>
