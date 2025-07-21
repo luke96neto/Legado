@@ -4,6 +4,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 defineProps({
     mustVerifyEmail: {
@@ -14,12 +15,43 @@ defineProps({
     },
 });
 
+const previewImage = ref(null);
 const user = usePage().props.auth.user;
 
 const form = useForm({
     name: user.name,
     email: user.email,
+    nickname: user.nickname,
+    image: user.image,
 });
+
+const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    form.image = file;
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewImage.value = e.target.result;
+            // Atualiza visualização imediata
+            user.image = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+const submit = () => {
+    form.transform((data) => ({
+        ...data,
+        // Garante que a imagem seja incluída corretamente
+        _method: 'patch' // Laravel precisa disso para métodos PATCH com upload de arquivos
+    })).post(route('profile.update'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            form.image = null;
+        },
+    });
+};
 </script>
 
 <template>
@@ -35,9 +67,24 @@ const form = useForm({
         </header>
 
         <form
-            @submit.prevent="form.patch(route('profile.update'))"
+            @submit.prevent="submit"
             class="mt-6 space-y-6"
         >
+            <div>
+                <label for="image" class="block text-sm font-medium text-white">Foto de perfil</label>
+                
+                <!-- Pré-visualização -->
+                <img v-if="previewImage" :src="previewImage" class="h-20 w-20 rounded-full mb-2 object-cover">
+                <img v-else-if="user.image" :src="'/storage/' + user.image" class="h-20 w-20 rounded-full mb-2 object-cover">
+                
+                <input 
+                    type="file"
+                    @change="handleImageChange"
+                    accept="image/*"
+                    class="mt-1 block w-full text-gray-600 dark:text-gray-300"
+                    id="image"
+                />
+            </div>
             <div>
                 <InputLabel for="name" value="Name" />
 
@@ -67,6 +114,21 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div>
+                <InputLabel for="nickname" value="Nickname" />
+
+                <TextInput
+                    id="nickname"
+                    type="text"
+                    class="mt-1 block w-full"
+                    v-model="form.nickname"
+                    required
+                    autocomplete="nickname"
+                />
+
+                <InputError class="mt-2" :message="form.errors.nickname" />
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">
