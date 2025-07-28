@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -37,6 +38,8 @@ Route::middleware('auth')->group(function () {
         ->name('project.rate');
     Route::put('/project/{project}/rate', [FeedbackController::class, 'update'])
         ->name('project.rate.update');
+    Route::post('/project/{id}/favorite', [FavoriteController::class, 'store'])
+        ->name('project.favorite');
 });
 
 require __DIR__.'/auth.php';

@@ -77,4 +77,15 @@ class Project extends Model
     {
         return $this->feedbacks()->where('user_id', $userId)->first();
     }
+
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'project_id', 'user_id');
+    }
+
+    public function hasUserFavorited($userId)
+    {
+        return $this->favoritedBy()->where('user_id', $userId)->exists();
+    }
+
 }

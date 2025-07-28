@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3'; // Adicionado usePage
 import StarRating from '@/Components/StarRating.vue'; // Importe seu componente StarRating
+import FavoriteButton from '@/Components/FavoriteButton.vue';
 
 // Define as props que este componente Vue espera receber do Laravel
 const props = defineProps({
@@ -12,6 +13,7 @@ const page = usePage(); // Hook para acessar as props globais do Inertia (como a
 
 // Lógica para obter a avaliação atual do usuário, se existir
 const currentUserRating = props.project.user_rating ? props.project.user_rating.rating : 0;
+const currentUserFavorited = props.project.user_favorited ? true : false;
 
 // Lógica para verificar se o usuário está logado
 const userIsLoggedIn = !!page.props.auth.user;
@@ -30,9 +32,12 @@ const userIsLoggedIn = !!page.props.auth.user;
         </template>
         <div class="container mx-auto px-4 py-8">
             <div class="bg-black rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold text-gray-300 mb-2">
-                    <span class="text-purple-600">Título:</span> {{ project.title }}
-                </h2>
+                <div class="flex justify-between">
+                    <h2 class="text-xl font-semibold text-gray-300 mb-2">
+                        <span class="text-purple-600">Título:</span> {{ project.title }}
+                    </h2>
+                    <favorite-button :project-id="project.id" :current-fav-value="currentUserFavorited"></favorite-button>
+                </div>
                 <p class="text-gray-300 mb-3">
                     <span class="text-purple-600">Descrição:</span> {{ project.description }}
                 </p>

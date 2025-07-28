@@ -89,6 +89,8 @@ class ProjectController extends Controller
         $averageRating = $project->averageRating();
         $ratingsCount = $project->ratingsCount();
         $userRating = $project->userRating(Auth::id());
+        
+        $userFavorited = $project->hasUserFavorited(Auth::id());
 
         return Inertia::render('Project/Show', [
             'project' => [
@@ -104,6 +106,7 @@ class ProjectController extends Controller
                 'average_rating' => $averageRating,
                 'ratings_count' => $ratingsCount,
                 'user_rating' => $userRating,
+                'user_favorited' => $userFavorited,
             ],
         ]);
     }
