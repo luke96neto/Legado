@@ -90,7 +90,7 @@ class AuthenticatedSessionController extends Controller
                 "{$provider}_id" => $providerUser->getId(),
                 "{$provider}_token" => $providerUser->token,
                 "{$provider}_refresh_token" => $providerUser->refreshToken,
-                'password' => bcrypt(Str::random(32)),
+                'password' => null,
                 'email_verified_at' => now()
             ]
         );
