@@ -40,7 +40,10 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-
+    
+    protected $appends = [
+        'has_password'
+    ];
     /**
      * Get the attributes that should be cast.
      *
@@ -75,5 +78,9 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+    public function getHasPasswordAttribute(): bool
+    {
+        return !is_null($this->password);
     }
 }

@@ -3,9 +3,11 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { useForm, usePage } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
 
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 const passwordInput = ref(null);
 const currentPasswordInput = ref(null);
 
@@ -47,7 +49,10 @@ const updatePassword = () => {
         </header>
 
         <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
-            <div>
+            <div v-if="!user.has_password" class="mt-1 block w-full text-white">
+                Você está logado via rede social. Defina uma senha para acessar com email.
+            </div>
+            <div v-if="user.has_password">
                 <InputLabel for="current_password" value="Current Password" />
 
                 <TextInput
