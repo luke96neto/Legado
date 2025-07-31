@@ -1,19 +1,32 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
+import { onMounted, reactive } from 'vue';
 
-defineProps({
+const props = defineProps({
     projects: Object,
+    formData: Object,
 });
 
 const user = usePage().props.auth?.user;
+
+const form = reactive({
+    isFavorite: 0,
+    ...props.formData
+})
 
 function isAuthor(project) {
   if (!user) return false;
   // Ajuste conforme o backend: user_id ou id
   return project.authors.some(author => author.user_id === user.id);
 }
+
+function setFavorites() {
+    form.isFavorite = (+form.isFavorite + 1) % 2;
+    router.get(route('project.index'), form);
+}
+
 </script>
 
 <template>
@@ -33,6 +46,12 @@ function isAuthor(project) {
                     class="inline-flex items-center px-4 py-2 bg-purple-800 text-white rounded hover:bg-blue-700 transition-colors">
                     Criar Novo Projeto
                 </Link>
+            </div>
+            <div>
+                <label class="text-white">
+                    <input type="checkbox" :checked="+form.isFavorite == 1" v-on:change="setFavorites" /> 
+                    Favoritos
+                </label>
             </div>
             <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <li v-for="project in projects.data" :key="project.id"

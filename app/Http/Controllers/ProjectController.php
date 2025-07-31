@@ -3,26 +3,55 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Tag;
 use App\Models\Feedback;
 use App\Models\Author;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::with('authors', 'feedbacks', 'tags')
+        $PAGE_SIZE = 15;
+        $data = $request->query();
+
+        $page = $request->query('page');
+        $filter_by_bookmarks = $request->query('isFavorite');
+
+        $all_projects = Project::with('authors', 'feedbacks', 'tags')
                             ->withAvg('feedbacks', 'rating')
                             ->latest()
-                            ->paginate(15);
+                            ->get();
+        
+        $filtered_projects = $all_projects->filter(function($project) use ($filter_by_bookmarks, $request){
+            $include = true;
+            if ($filter_by_bookmarks) {
+                $include = $request->user()->favoriteds->some('id', $project->id);
+            }
+
+            return $include;
+        });
+
+        $projects = $filtered_projects->forPage($page, $PAGE_SIZE);
+        $paginator = new LengthAwarePaginator(
+            $projects, 
+            $filtered_projects->count(), 
+            $PAGE_SIZE,
+            $page,
+            [
+                'path' => url()->full()
+            ] 
+        );
 
         return Inertia::render('Project/Index', [
-            'projects' => $projects,
+            'projects' => $paginator,
+            'formData' => $data,
         ]);
     }
 
@@ -72,7 +101,7 @@ class ProjectController extends Controller
             $project->authors()->attach($addauthor->id);
         }
 
-        return redirect()->route('project.show', $project->slug); // Use $project->slug para a rota
+        return redirect()->route('project.show', $project->slug);
     }
 
     /**
@@ -131,15 +160,12 @@ class ProjectController extends Controller
     {
         $validated = $request->validated();
 
-        // Atualiza os dados do projeto
         $project->fill($validated);
 
-        // Atualiza a tag do projeto, se fornecida
         if (isset($validated['tag_id'])) {
             $project->tags()->sync([$validated['tag_id']]);
         }
 
-        // Atualiza imagem se fornecida
         if ($request->hasFile('image')) {
             $project->image = $request->file('image')->store('project-images', 'public');
         }
