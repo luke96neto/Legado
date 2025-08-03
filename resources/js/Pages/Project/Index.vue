@@ -7,26 +7,50 @@ import { onMounted, reactive } from 'vue';
 const props = defineProps({
     projects: Object,
     formData: Object,
+    countItems: Number,
+    all_tags: Array,
 });
 
 const user = usePage().props.auth?.user;
+const hasItems = props.countItems !== 0;
 
 const form = reactive({
     isFavorite: 0,
+    selectedTags: [],
     ...props.formData
 })
 
 function isAuthor(project) {
-  if (!user) return false;
-  // Ajuste conforme o backend: user_id ou id
-  return project.authors.some(author => author.user_id === user.id);
+    if (!user) return false;
+    return project.authors.some(author => author.user_id === user.id);
 }
 
 function setFavorites() {
     form.isFavorite = (+form.isFavorite + 1) % 2;
-    router.get(route('project.index'), form);
+    submitForm();
 }
 
+function toggleTag(tagId) {
+    const index = form.selectedTags.indexOf(tagId.toString());
+    if (index === -1) {
+        form.selectedTags.push(tagId.toString());
+    } else {
+        form.selectedTags.splice(index, 1);
+    }
+    submitForm();
+}
+
+function submitForm() {
+    router.get(route('project.index'), {
+        ...form,
+        tags: form.selectedTags.join(','),
+        page: 1
+    });
+}
+
+function isTagSelected(tagId) {
+    return form.selectedTags.includes(tagId.toString());
+}
 </script>
 
 <template>
@@ -34,25 +58,41 @@ function setFavorites() {
     <Head title="Projetos" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                
-            </h2>
-        </template>
 
         <div class="container mx-auto px-4 py-8">
-            <div class="mb-6">
-                <Link :href="route('project.create')"
-                    class="inline-flex items-center px-4 py-2 bg-purple-800 text-white rounded hover:bg-blue-700 transition-colors">
-                    Criar Novo Projeto
-                </Link>
+            <div class="flex justify-between">
+                <div class="mb-6">
+                    <Link :href="route('project.create')"
+                        class="inline-flex items-center px-4 py-2 bg-purple-800 text-white rounded hover:bg-blue-700 transition-colors">
+                        Criar Novo Projeto
+                    </Link>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <span class="text-gray-300">Tags:</span>
+                    <div class="flex flex-wrap gap-2 mt-2 mb-2">
+                        <span
+                            v-for="tag in props.all_tags"
+                            :key="tag.id"
+                            class="text-xs px-3 py-1 rounded-full bg-purple-600 text-white hover:cursor-pointer"
+                            @click="toggleTag(tag.id)"
+                            >
+                            {{ tag.name }}
+                            <div v-if="isTagSelected(tag.id)" class="inline">
+                                ×
+                            </div>
+                        </span>
+                    </div>
+                </div>
             </div>
-            <div>
-                <label class="text-white">
-                    <input type="checkbox" :checked="+form.isFavorite == 1" v-on:change="setFavorites" /> 
+            
+            <div class="mb-3">
+                <label class="text-white hover:cursor-pointer">
+                    <input class="hover:cursor-pointer" type="checkbox" :checked="+form.isFavorite == 1" v-on:change="setFavorites" /> 
                     Favoritos
                 </label>
             </div>
+            
             <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <li v-for="project in projects.data" :key="project.id"
                     class="bg-black border-2 border-purple-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -132,7 +172,7 @@ function setFavorites() {
                     </div>
                 </li>
             </ul>
-            <div class="mt-8 flex justify-center">
+            <div v-if="hasItems" class="mt-8 flex justify-center">
                 <nav class="flex items-center gap-1">
                     <Link 
                         v-for="(link, index) in projects.links"
@@ -148,6 +188,13 @@ function setFavorites() {
                         preserve-state
                     />
                 </nav>
+            </div>
+            <div v-else class="flex flex-wrap gap-2 mt-2 text-center">
+                <span 
+                    class="text-gray-400 text-sm text-center"
+                    >
+                    Sem registros.
+                </span>
             </div>
         </div>
     </AuthenticatedLayout>

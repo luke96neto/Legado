@@ -20,24 +20,32 @@ class ProjectController extends Controller
     {
         $PAGE_SIZE = 15;
         $data = $request->query();
-
         $page = $request->query('page');
         $filter_by_bookmarks = $request->query('isFavorite');
-
+        $filter_by_tags = $request->query('tags') ? explode(',',$request->query('tags')) : [];
         $all_projects = Project::with('authors', 'feedbacks', 'tags')
                             ->withAvg('feedbacks', 'rating')
                             ->latest()
                             ->get();
+        $all_tags = Tag::all();
         
-        $filtered_projects = $all_projects->filter(function($project) use ($filter_by_bookmarks, $request){
+        $filtered_projects = $all_projects->filter(function($project) use ($filter_by_bookmarks, $filter_by_tags, $request){
             $include = true;
-            if ($filter_by_bookmarks) {
-                $include = $request->user()->favoriteds->some('id', $project->id);
+            $includeBybookmarks = true;
+            $includeByTags = true;
+            if(!empty($filter_by_tags)) {
+                $includeByTags = $project->tags->pluck('id')->intersect($filter_by_tags)->count() == count($filter_by_tags);
             }
-
+            
+            if ($filter_by_bookmarks) {
+                $includeBybookmarks = $request->user()->favoriteds->some('id', $project->id);
+            }
+            if(!$includeBybookmarks || !$includeByTags){
+                $include = false;
+            }
             return $include;
         });
-
+        
         $projects = $filtered_projects->forPage($page, $PAGE_SIZE);
         $paginator = new LengthAwarePaginator(
             $projects, 
@@ -48,10 +56,12 @@ class ProjectController extends Controller
                 'path' => url()->full()
             ] 
         );
-
+        
         return Inertia::render('Project/Index', [
             'projects' => $paginator,
+            'countItems' => $paginator->total(),
             'formData' => $data,
+            'all_tags' => $all_tags,
         ]);
     }
 
@@ -145,7 +155,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        $tags = \App\Models\Tag::all();
+        $tags = Tag::all();
         $project->load('tags');
         return Inertia::render('Project/Edit', [
             'project' => $project,
