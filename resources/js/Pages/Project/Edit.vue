@@ -1,32 +1,32 @@
-
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import ProjectForm from '@/Components/Project/ProjectForm.vue';
 
 const props = defineProps({
   project: Object,
   tags: Array
 });
 
-const tags = ref(props.tags || []);
+// const tags = ref(props.tags || []);
 
-const form = useForm({
-  title: props.project.title,
-  description: props.project.description,
-  status: props.project.status,
-  tag_id: props.project.tags?.[0]?.id || '',
-  image: null
-});
+// const form = useForm({
+//   title: props.project.title,
+//   description: props.project.description,
+//   status: props.project.status,
+//   tag_id: props.project.tags?.[0]?.id || '',
+//   image: null
+// });
 
 function onFileChange(e) {
   form.image = e.target.files[0];
 }
 
-function submit() {
+function submit(form) {
   form.put(route('project.update', { project: props.project.slug }), {
-    method: 'put',
+    // method: 'put',
     preserveScroll: true,
     onError: (errors) => {
       console.error(errors);
@@ -37,6 +37,7 @@ function submit() {
 
 
 <template>
+
   <Head title="Projects - Edit" />
   <AuthenticatedLayout>
     <template #header>
@@ -45,7 +46,7 @@ function submit() {
       </h2>
     </template>
 
-    <div class="container mx-auto px-4 py-8">
+    <!-- <div class="container mx-auto px-4 py-8">
       <form @submit.prevent="submit" enctype="multipart/form-data" class="space-y-6">
         <div>
           <label for="title" class="block text-sm font-medium text-gray-300">Título</label>
@@ -130,9 +131,9 @@ function submit() {
           <span v-else>Salvar</span>
         </button>
       </form>
+    </div> -->
+    <div class="container mx-auto px-4 py-8">
+      <ProjectForm :project="props.project" :tags="props.tags" @submit="submit" />
     </div>
   </AuthenticatedLayout>
 </template>
-
-
-

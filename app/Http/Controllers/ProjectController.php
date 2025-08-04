@@ -157,6 +157,7 @@ class ProjectController extends Controller
     {
         $tags = Tag::all();
         $project->load('tags');
+        $project->load('authors');
         return Inertia::render('Project/Edit', [
             'project' => $project,
             'tags' => $tags
