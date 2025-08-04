@@ -75,7 +75,8 @@ const showingNavigationDropdown = ref(false);
                   </template>
 
                   <template #content>
-                    <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+                    <DropdownLink :href="route('profile.show', $page.props.auth.user.nickname)"> Profile </DropdownLink>
+                    <DropdownLink :href="route('profile.edit')"> Settings </DropdownLink>
                     <DropdownLink :href="route('logout')" method="post" as="button">
                       Log Out
                     </DropdownLink>
