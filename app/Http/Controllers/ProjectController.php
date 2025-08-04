@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Tag;
 use App\Models\Feedback;
 use App\Models\Author;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -191,5 +192,33 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         //
+    }
+    public function dashboard()
+    {
+        $user = Auth::user();
+
+        $totalProjects = Project::count();
+        $projectsInProgress = Project::where('status', 'em andamento')->count();
+        $completedProjects = Project::where('status', 'concluido')->count();
+        $draftProjects = Project::where('status', 'rascunho')->count();
+
+        $examples = Project::where('is_example', true)->get(); // Campo booleano
+
+        $topCreators = User::withCount('projects')
+                        ->orderByDesc('projects_count')
+                        ->take(3)
+                        ->get();
+
+        $myProjects = Project::where('user_id', $user->id)->get();
+
+        return Inertia::render('Dashboard', [
+            'totalProjects' => $totalProjects,
+            'projectsInProgress' => $projectsInProgress,
+            'completedProjects' => $completedProjects,
+            'draftProjects' => $draftProjects,
+            'examples' => $examples,
+            'topCreators' => $topCreators,
+            'myProjects' => $myProjects,
+        ]);
     }
 }

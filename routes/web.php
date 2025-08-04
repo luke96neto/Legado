@@ -40,6 +40,9 @@ Route::middleware('auth')->group(function () {
         ->name('project.rate.update');
     Route::post('/project/{id}/favorite', [FavoriteController::class, 'store'])
         ->name('project.favorite');
+        
+    Route::get('/dashboard', [ProjectController::class, 'dashboard'])->name('dashboard');
+   
 });
 
 require __DIR__.'/auth.php';
