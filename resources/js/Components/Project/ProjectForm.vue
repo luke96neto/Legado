@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 
 const repositories = ref([]);
 const collaborators = ref([]);
@@ -67,14 +66,6 @@ const form = useForm({
 
 const submit = () => {
     props.onSubmit(form);
-    // form.post('store', {
-    //     onSuccess: () => {
-    //         form.reset();
-    //     },
-    //     onError: (errors) => {
-    //         console.error(errors);
-    //     }
-    // });
 };
 
 const initForm = () => {
