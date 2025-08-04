@@ -21,10 +21,10 @@ const showingNavigationDropdown = ref(false);
           <div class="flex h-16 justify-between">
             <div class="flex">
               <!-- Logo -->
-              <div class="flex shrink-0 items-center">
+              <div class="flex shrink-3 items-center">
                 <Link :href="route('dashboard')">
-                  <ApplicationLogo
-                    class="block h-9 w-auto fill-current text-white dark:text-white"
+                   <img src="/img/globo-Legado.png"
+                    class="block h-16 w-auto fill-current text-white dark:text-white fixed top-0 left-0 z-50 p-0"
                   />
                 </Link>
               </div>
