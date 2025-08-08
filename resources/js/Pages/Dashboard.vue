@@ -59,12 +59,12 @@ const props = defineProps({
           <div
             v-for="example in examples"
             :key="example.id"
-            class="min-w-[120px] bg-gray-800 p-2 rounded text-center"
+            class="min-w-[120px] bg-gray-800 p-2 rounded-sm text-center"
           >
             <img
               :src="example.image ? `/storage/${example.image}` : '/projetos/default.png'"
               :alt="example.title"
-              class="w-full h-24 object-cover rounded mb-1"
+              class="w-full h-24 object-cover rounded-sm mb-1"
             />
             <p class="text-sm">{{ example.title }}</p>
           </div>
@@ -97,12 +97,12 @@ const props = defineProps({
           <div
             v-for="project in myProjects"
             :key="project.id"
-            class="min-w-[120px] bg-gray-800 p-2 rounded text-center"
+            class="min-w-[120px] bg-gray-800 p-2 rounded-sm text-center"
           >
             <img
               :src="project.image ? `/storage/${project.image}` : '/meus-projetos/default.png'"
               :alt="project.title"
-              class="w-full h-24 object-cover rounded mb-1"
+              class="w-full h-24 object-cover rounded-sm mb-1"
             />
             <p class="text-sm">{{ project.title }}</p>
           </div>

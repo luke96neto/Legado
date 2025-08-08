@@ -27,14 +27,14 @@ const submit = () => {
 
 <template>
   <GuestLayout>
-    <div class="bg-gray-900 p-8 rounded shadow w-full max-w-md">
+    <div class="bg-gray-900 p-8 rounded-sm shadow-sm w-full max-w-md">
 
       <img src="/img/logo-legado-wname.png" alt="Logo" class="mx-auto mb-6 w-24 h-auto" />
 
       <h1 class="text-2xl text-white font-bold text-center mb-4">Login</h1>
 
-      <a :href="route('github.login')" class="w-full block text-center bg-black text-white py-2 rounded mb-2">Continuar com GitHub</a>
-      <a :href="route('google.login')" class="w-full block text-center bg-white text-black py-2 rounded mb-4">Continuar com Google</a>
+      <a :href="route('github.login')" class="w-full block text-center bg-black text-white py-2 rounded-sm mb-2">Continuar com GitHub</a>
+      <a :href="route('google.login')" class="w-full block text-center bg-white text-black py-2 rounded-sm mb-4">Continuar com Google</a>
 
       <!-- Formulário -->
       <form @submit.prevent="submit">
@@ -42,7 +42,7 @@ const submit = () => {
           v-model="form.email"
           type="email"
           placeholder="Email"
-          class="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 mb-1 text-white"
+          class="w-full bg-gray-800 border border-gray-700 rounded-sm px-3 py-2 mb-1 text-white"
         />
         <InputError :message="form.errors.email" class="mb-2 text-red-400 text-sm" />
 
@@ -52,7 +52,7 @@ const submit = () => {
           v-model="form.password"
           type="password"
           placeholder="Senha"
-          class="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 mb-1 text-white"
+          class="w-full bg-gray-800 border border-gray-700 rounded-sm px-3 py-2 mb-1 text-white"
         />
         <InputError :message="form.errors.password" class="mb-2 text-red-400 text-sm" />
 
@@ -60,7 +60,7 @@ const submit = () => {
 
         <button
           type="submit"
-          class="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded font-semibold text-white disabled:opacity-50"
+          class="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-sm font-semibold text-white disabled:opacity-50"
           :disabled="form.processing"
         >
           Entrar

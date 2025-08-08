@@ -22,7 +22,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <div class="bg-gray-900 p-8 rounded shadow w-full max-w-md">
+        <div class="bg-gray-900 p-8 rounded-sm shadow-sm w-full max-w-md">
 
             <img src="/img/logo-legado-wname.png" alt="Logo" class="mx-auto mb-6 w-24 h-auto" />
 
@@ -120,13 +120,13 @@ const submit = () => {
                 <div class="mt-4 flex items-center justify-end gap-4">
                     <Link
                         :href="route('login')"
-                        class="rounded-md text-sm text-gray-400 underline hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        class="rounded-md text-sm text-gray-400 underline hover:text-gray-800 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         Already registered?
                     </Link>
                 
                     <Button
-                        class="w-20 bg-purple-600 hover:bg-purple-700 py-2 rounded font-semibold text-white disabled:opacity-50"
+                        class="w-20 bg-purple-600 hover:bg-purple-700 py-2 rounded-sm font-semibold text-white disabled:opacity-50"
                         :disabled="form.processing"
                     >
                         Register

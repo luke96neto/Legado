@@ -63,7 +63,7 @@ function isTagSelected(tagId) {
             <div class="flex justify-between">
                 <div class="mb-6">
                     <Link :href="route('project.create')"
-                        class="inline-flex items-center px-4 py-2 bg-purple-800 text-white rounded hover:bg-blue-700 transition-colors">
+                        class="inline-flex items-center px-4 py-2 bg-purple-800 text-white rounded-sm hover:bg-blue-700 transition-colors">
                         Criar Novo Projeto
                     </Link>
                 </div>
@@ -165,7 +165,7 @@ function isTagSelected(tagId) {
                         <!-- Botão de edição para o autor -->
                         <div v-if="isAuthor(project)" class="mt-4 px-6 pb-4">
                             <Link :href="route('project.edit', project.slug)"
-                                class="inline-flex items-center px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition-colors">
+                                class="inline-flex items-center px-3 py-1 bg-yellow-600 text-white rounded-sm hover:bg-yellow-700 transition-colors">
                                 Editar
                             </Link>
                         </div>

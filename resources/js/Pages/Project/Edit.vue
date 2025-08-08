@@ -54,7 +54,7 @@ function submit(form) {
             v-model="form.title"
             type="text"
             id="title"
-            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
             :class="{ 'border-red-500': form.errors.title }"
             required
           />
@@ -68,7 +68,7 @@ function submit(form) {
           <textarea
             v-model="form.description"
             id="description"
-            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
             :class="{'border-red-500' : form.errors.description}"
             rows="4"
             required>
@@ -83,7 +83,7 @@ function submit(form) {
           <select
             v-model="form.status"
             id="status"
-            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
           >
             <option value="rascunho">Rascunho</option>
             <option value="em_andamento">Em andamento</option>
@@ -96,7 +96,7 @@ function submit(form) {
           <select
             v-model="form.tag_id"
             id="tag_id"
-            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
           >
             <option v-for="tag in tags" :key="tag.id" :value="tag.id">{{ tag.name }}</option>
           </select>
@@ -109,7 +109,7 @@ function submit(form) {
             @change="onFileChange"
             accept="image/*"
             class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4
-            file:rounded file:border-0
+            file:rounded-sm file:border-0
             file:text-sm file:font-semibold
             file:bg-purple-600 file:text-white
             hover:file:bg-purple-900
@@ -124,7 +124,7 @@ function submit(form) {
 
         <button
           type="submit"
-          class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-900 transition-colors"
+          class="px-4 py-2 bg-purple-600 text-white rounded-sm hover:bg-purple-900 transition-colors"
           :disabled="form.processing"
         >
           <span v-if="form.processing">Salvando...</span>

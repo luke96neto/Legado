@@ -54,7 +54,7 @@ const showingNavigationDropdown = ref(false);
                     <span class="inline-flex rounded-md">
                       <button
                         type="button"
-                        class="inline-flex items-center rounded-md border border-transparent bg-purple-500 px-3 py-2 text-sm font-medium leading-4 text-white transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
+                        class="inline-flex items-center rounded-md border border-transparent bg-purple-500 px-3 py-2 text-sm font-medium leading-4 text-white transition duration-150 ease-in-out hover:text-gray-700 focus:outline-hidden dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
                       >
                         {{ $page.props.auth.user.nickname }}
 
@@ -88,7 +88,7 @@ const showingNavigationDropdown = ref(false);
             <div class="-me-2 flex items-center sm:hidden">
               <button
                 @click="showingNavigationDropdown = !showingNavigationDropdown"
-                class="inline-flex items-center justify-center rounded-md p-2 text-white transition duration-150 ease-in-out hover:bg-white hover:text-white focus:bg-white focus:text-white focus:outline-none dark:text-white dark:hover:bg-white dark:hover:text-white dark:focus:bg-white dark:focus:text-white"
+                class="inline-flex items-center justify-center rounded-md p-2 text-white transition duration-150 ease-in-out hover:bg-white hover:text-white focus:bg-white focus:text-white focus:outline-hidden dark:text-white dark:hover:bg-white dark:hover:text-white dark:focus:bg-white dark:focus:text-white"
               >
                 <svg
                   class="h-6 w-6"
@@ -163,7 +163,7 @@ const showingNavigationDropdown = ref(false);
       </nav>
 
       <!-- Page Heading -->
-      <header class="bg-black shadow dark:bg-gray-800" v-if="$slots.header">
+      <header class="bg-black shadow-sm dark:bg-gray-800" v-if="$slots.header">
         <div class="mx-auto max-w-7xl px-4 py-2 sm:px-4 lg:px-6">
           <slot name="header" />
         </div>
