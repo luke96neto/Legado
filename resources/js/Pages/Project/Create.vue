@@ -1,60 +1,9 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+// import { ref, onMounted, watch } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 
-const repositories = ref([]);
-const collaborators = ref([]);
-const selectedRepo = ref(null);
-const loadingCollabs = ref(false);
-const collaboratorsInput = ref('');
-
-const loadRepositories = async () => {
-    try {
-        const response = await axios.get('/github/repos');
-        repositories.value = response.data;
-    } catch (error) {
-        console.error('Falha ao carregar os repositorios:', error); // so p testar, adicionar um melhor tratamento dps
-    }
-};
-
-const loadCollaborators = async (repoFullName) => {
-    if (!repoFullName) return;
-    
-    const [owner, repo] = repoFullName.split('/');
-    loadingCollabs.value = true;
-    
-    try {
-        const response = await axios.get(`/github/repos/${owner}/${repo}/collaborators`);
-        collaborators.value = response.data;
-        collaboratorsInput.value = response.data.map(c => c.login).join(', ');
-    } catch (error) {
-        console.error('Error loading collaborators:', error);
-    } finally {
-        loadingCollabs.value = false;
-    }
-};
-
-watch(selectedRepo, (newRepo) => {
-    if (newRepo) {
-        form.title = newRepo.name;
-        form.description = newRepo.description;
-        form.repo_url = newRepo.html_url;
-        form.authors = collaboratorsInput;
-        loadCollaborators(newRepo.full_name);
-    }
-});
-
-const form = useForm({
-    title: '',
-    description: '',
-    authors: '',
-    status: 'rascunho',
-    image: null,
-    repo_url: ''
-});
-
-const submit = () => {
+const submit = (form) => {
     form.post('store', {
         onSuccess: () => {
             form.reset();
@@ -65,13 +14,27 @@ const submit = () => {
     });
 };
 
-onMounted(() => {
-    loadRepositories();
-});
+import ProjectForm from '@/Components/Project/ProjectForm.vue';
 
 </script>
 
 <template>
+    <Head title="Projects - create" />
+
+    <AuthenticatedLayout>
+        <template #header>
+            <h2 class="text-xl font-semibold leading-tight text-gray-300 dark:text-gray-200">
+                Criar Novo Projeto
+            </h2>
+        </template>
+
+        <div class="container mx-auto px-4 py-8">
+            <ProjectForm @submit="submit" />
+        </div>
+    </AuthenticatedLayout>
+</template>
+
+<!-- <template>
     <Head title="Projects - create" />
 
     <AuthenticatedLayout>
@@ -195,7 +158,7 @@ onMounted(() => {
             </form>
         </div>
     </AuthenticatedLayout>
-</template>
+</template> -->
 
 
     
