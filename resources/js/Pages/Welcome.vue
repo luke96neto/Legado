@@ -47,7 +47,7 @@ onBeforeUnmount(() => {
                 </Link>
                 <Link v-else :href="route('login')"
                     class="w-40 h-10 text-center py-2 m-2 rounded-lg font-extrabold text-black bg-white hover:bg-gray-100 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500">
-                Entrar ->
+                Entrar <i class="fa-solid fa-arrow-right"></i>
                 </Link>
             </div>
         </nav>
@@ -60,7 +60,7 @@ onBeforeUnmount(() => {
                     <div class="flex justify-center  mt-[12%] h-[40px]">
                         <Link :href="route('register')"
                             class="w-[150px] py-1.5 text-center rounded-lg font-extrabold text-black bg-white hover:bg-gray-100 transition-all duration-200 shadow-md hover:shadow-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500">
-                        Criar conta ->
+                        Criar conta <i class="fa-solid fa-arrow-right"></i>
                         </Link>
                     </div>
                 </div>

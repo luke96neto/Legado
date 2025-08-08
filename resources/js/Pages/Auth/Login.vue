@@ -1,7 +1,9 @@
 <script setup>
-import { Head, Link, useForm } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
   canResetPassword: {
@@ -42,41 +44,40 @@ const submit = () => {
       <div class="bg-gray-500 w-full h-[0.1px]"></div>
     </div>
     <form class="text-white" @submit.prevent="submit">
-      <div class="">
-        <label>
-          Email
-          <input 
-            v-model="form.email"
-            type="email"
-            placeholder="dominio@email.com"
-            class="w-full bg-gray-900 border border-gray-700 rounded-sm px-3 py-2 mb-1 text-white"
+      <div class="mt">
+        <InputLabel for="email" value="Email" />
+        <TextInput
+          id="email"
+          type="email"
+          class="w-full bg-gray-900 border border-gray-700 rounded-sm px-3 py-2 mb-1 text-white"
+          v-model="form.email"
+          placeholder="dominio@email.com"
+          required
           />
-          <InputError :message="form.errors.email" class="mb-2 text-red-400 text-sm" />
-        </label>
+        <InputError class="mt-2" :message="form.errors.email" />
       </div>
-      <div class="">
-        <label>
-          Senha
-          <input
-            v-model="form.password"
-            type="password"
-            placeholder="Senha"
-            class="w-full bg-gray-900 border border-gray-700 rounded-sm px-3 py-2 mb-1"
-          />
-          <InputError :message="form.errors.password" class="mb-2 text-red-400 text-sm" />
-        </label>
+      <div class="mt-4">
+        <InputLabel for="password" value="Senha" />
+        <TextInput
+          id="password"
+          type="password"
+          class="w-full bg-gray-900 border border-gray-700 rounded-sm px-3 py-2 mb-1"
+          v-model="form.password"
+          placeholder="Senha"
+          required
+        />
+        <InputError :message="form.errors.password" class="mb-2 text-red-400 text-sm" />
       </div>
       <button
         type="submit"
         class="w-full mt-4 bg-purple-600 hover:bg-purple-700 py-2 rounded-sm font-semibold text-white disabled:opacity-50"
         :disabled="form.processing"
-      >
+        >
         Entrar
-      </button>
+    </button>
     </form>
-    <!-- Link para registro -->
     <div class="text-center mt-4 text-sm text-gray-400">
-      Não tem uma conta?
+      Não possui uma conta?
       <Link :href="route('register')" class="text-purple-400 hover:underline">Criar conta</Link>
     </div>
   </GuestLayout>
