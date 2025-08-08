@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Storage;
@@ -56,6 +57,15 @@ class ProfileController extends Controller
         \Log::debug('Dados salvos controller');
 
         return Redirect::route('profile.edit');
+    }
+
+    public function show($nickname){
+        $user = User::where('nickname', $nickname)->firstOrFail();
+
+        return Inertia::render('Profile/Show', [
+            'user' => $user
+        ]);
+
     }
 
     /**
