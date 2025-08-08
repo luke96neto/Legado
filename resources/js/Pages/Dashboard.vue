@@ -17,7 +17,7 @@ const props = defineProps({
   <Head title="Dashboard" />
 
   <AuthenticatedLayout>
-    <div class="p-6 text-white bg-black min-h-screen">
+    <div class="p-6 text-white bg-purple-950 min-h-screen">
       <!-- Título -->
       <div class="w-full flex justify-center items-center mt-1">
         <!-- <img src="/img/globo-Legado.png" alt="Logo Legado" class="h-45"> -->

@@ -27,51 +27,57 @@ const submit = () => {
 
 <template>
   <GuestLayout>
-    <div class="bg-gray-900 p-8 rounded-sm shadow-sm w-full max-w-md">
-
-      <img src="/img/logo-legado-wname.png" alt="Logo" class="mx-auto mb-6 w-24 h-auto" />
-
-      <h1 class="text-2xl text-white font-bold text-center mb-4">Login</h1>
-
-      <a :href="route('github.login')" class="w-full block text-center bg-black text-white py-2 rounded-sm mb-2">Continuar com GitHub</a>
-      <a :href="route('google.login')" class="w-full block text-center bg-white text-black py-2 rounded-sm mb-4">Continuar com Google</a>
-
-      <!-- Formulário -->
-      <form @submit.prevent="submit">
-        <input 
-          v-model="form.email"
-          type="email"
-          placeholder="Email"
-          class="w-full bg-gray-800 border border-gray-700 rounded-sm px-3 py-2 mb-1 text-white"
-        />
-        <InputError :message="form.errors.email" class="mb-2 text-red-400 text-sm" />
-
-        <div class="py-1"></div>
-
-        <input
-          v-model="form.password"
-          type="password"
-          placeholder="Senha"
-          class="w-full bg-gray-800 border border-gray-700 rounded-sm px-3 py-2 mb-1 text-white"
-        />
-        <InputError :message="form.errors.password" class="mb-2 text-red-400 text-sm" />
-
-        <div class="py-2"></div>
-
-        <button
-          type="submit"
-          class="w-full bg-purple-600 hover:bg-purple-700 py-2 rounded-sm font-semibold text-white disabled:opacity-50"
-          :disabled="form.processing"
-        >
-          Entrar
-        </button>
-      </form>
-
-      <!-- Link para registro -->
-      <div class="text-center mt-4 text-sm text-gray-400">
-        Não tem uma conta?
-        <Link :href="route('register')" class="text-purple-400 hover:underline">Criar conta</Link>
+    <img src="/img/globo-Legado.png" alt="Logo" class="mx-auto mb-6 w-[180px] h-auto" />
+    <a :href="route('github.login')" class="border w-full block text-center bg-black text-white py-2 rounded-sm mb-2">
+      <i class="fa-brands fa-github"></i>
+      Continuar com GitHub
+    </a>
+    <a :href="route('google.login')" class="w-full block text-center bg-white text-black py-2 rounded-sm">
+      <i class="fa-brands fa-google"></i>
+      Continuar com Google
+    </a>
+    <div class="text-white flex gap-1 items-center m-2">
+      <div class="bg-gray-500 w-full h-[0.1px]"></div>
+      <p>ou</p>
+      <div class="bg-gray-500 w-full h-[0.1px]"></div>
+    </div>
+    <form class="text-white" @submit.prevent="submit">
+      <div class="">
+        <label>
+          Email
+          <input 
+            v-model="form.email"
+            type="email"
+            placeholder="dominio@email.com"
+            class="w-full bg-gray-900 border border-gray-700 rounded-sm px-3 py-2 mb-1 text-white"
+          />
+          <InputError :message="form.errors.email" class="mb-2 text-red-400 text-sm" />
+        </label>
       </div>
+      <div class="">
+        <label>
+          Senha
+          <input
+            v-model="form.password"
+            type="password"
+            placeholder="Senha"
+            class="w-full bg-gray-900 border border-gray-700 rounded-sm px-3 py-2 mb-1"
+          />
+          <InputError :message="form.errors.password" class="mb-2 text-red-400 text-sm" />
+        </label>
+      </div>
+      <button
+        type="submit"
+        class="w-full mt-4 bg-purple-600 hover:bg-purple-700 py-2 rounded-sm font-semibold text-white disabled:opacity-50"
+        :disabled="form.processing"
+      >
+        Entrar
+      </button>
+    </form>
+    <!-- Link para registro -->
+    <div class="text-center mt-4 text-sm text-gray-400">
+      Não tem uma conta?
+      <Link :href="route('register')" class="text-purple-400 hover:underline">Criar conta</Link>
     </div>
   </GuestLayout>
 </template>
