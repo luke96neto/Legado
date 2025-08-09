@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from "vue";
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
-import NavLink from "@/Components/NavLink.vue";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import ApplicationLogo from "@/components/ApplicationLogo.vue";
+import Dropdown from "@/components/Dropdown.vue";
+import DropdownLink from "@/components/DropdownLink.vue";
+import NavLink from "@/components/NavLink.vue";
+import ResponsiveNavLink from "@/components/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/vue3";
 
 const showingNavigationDropdown = ref(false);
@@ -23,7 +23,7 @@ const showingNavigationDropdown = ref(false);
               <!-- Logo -->
               <div class="flex shrink-3 items-center">
                 <Link :href="route('dashboard')">
-                   <img src="/img/globo-Legado.png"
+                  <img src="/img/globo-Legado.png"
                     class="block h-16 w-auto fill-current text-white top-0 left-0 z-50 p-0"
                   />
                 </Link>

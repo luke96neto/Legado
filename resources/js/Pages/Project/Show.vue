@@ -1,8 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3'; // Adicionado usePage
-import StarRating from '@/Components/StarRating.vue'; // Importe seu componente StarRating
-import FavoriteButton from '@/Components/FavoriteButton.vue';
+import StarRating from '@/components/StarRating.vue'; // Importe seu componente StarRating
+import FavoriteButton from '@/components/FavoriteButton.vue';
 
 // Define as props que este componente Vue espera receber do Laravel
 const props = defineProps({

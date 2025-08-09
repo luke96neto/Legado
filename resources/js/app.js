@@ -8,6 +8,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+document.documentElement.classList.add('dark');
 
 createInertiaApp({
     title: (title) => `${title}`,

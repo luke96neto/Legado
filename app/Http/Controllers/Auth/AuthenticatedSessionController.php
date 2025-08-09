@@ -118,13 +118,13 @@ class AuthenticatedSessionController extends Controller
     // Métodos similares para Google
     public function googleRedirect()
     {
-        return Socialite::driver('google')->setScopes(['user:email', 'repo'])->redirect();
+        return Socialite::driver('google')->redirect();
     }
 
     public function googleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->setScopes(['user:email', 'repo'])->stateless()->user();
+            $googleUser = Socialite::driver('google')->stateless()->user();
             return $this->handleSocialiteCallback($googleUser, 'google');
         } catch (\Exception $e) {
             \Log::error('Google Auth Error: ' . $e->getMessage());
