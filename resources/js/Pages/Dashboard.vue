@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import Card from '@/Components/Card.vue';
 
 const props = defineProps({
   totalProjects: Number,
@@ -18,11 +19,6 @@ const props = defineProps({
 
   <AuthenticatedLayout>
     <div class="p-6 text-white bg-black min-h-screen">
-      <!-- Título -->
-      <div class="w-full flex justify-center items-center mt-1">
-        <!-- <img src="/img/globo-Legado.png" alt="Logo Legado" class="h-45"> -->
-      </div>
-
       <!-- Estatísticas -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center mb-8">
         <div>
@@ -55,19 +51,16 @@ const props = defineProps({
       <!-- Projetos exemplo -->
       <section class="mb-10">
         <h2 class="text-white text-lg font-bold mb-2">Exemplos</h2>
-        <div class="flex overflow-x-auto space-x-4">
-          <div
+        <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <Card
             v-for="example in examples"
             :key="example.id"
-            class="min-w-[120px] bg-gray-800 p-2 rounded text-center"
-          >
-            <img
-              :src="example.image ? `/storage/${example.image}` : '/projetos/default.png'"
-              :alt="example.title"
-              class="w-full h-24 object-cover rounded mb-1"
-            />
-            <p class="text-sm">{{ example.title }}</p>
-          </div>
+            :title="example.title"
+            :image="example.image"
+            :description="example.description"
+            :link="`/projects/${example.id}`"
+            fallback="/projetos/default.png"
+          />
         </div>
       </section>
 
@@ -93,19 +86,16 @@ const props = defineProps({
       <!-- Meus projetos -->
       <section>
         <h2 class="text-white text-lg font-bold mb-2">Meus projetos</h2>
-        <div class="flex overflow-x-auto space-x-4">
-          <div
+        <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <Card
             v-for="project in myProjects"
             :key="project.id"
-            class="min-w-[120px] bg-gray-800 p-2 rounded text-center"
-          >
-            <img
-              :src="project.image ? `/storage/${project.image}` : '/meus-projetos/default.png'"
-              :alt="project.title"
-              class="w-full h-24 object-cover rounded mb-1"
-            />
-            <p class="text-sm">{{ project.title }}</p>
-          </div>
+            :title="project.title"
+            :image="project.image"
+            :description="project.description"
+            :link="`/project/${project.slug}`"
+            fallback="/meus-projetos/default.png"
+          />
         </div>
       </section>
     </div>
