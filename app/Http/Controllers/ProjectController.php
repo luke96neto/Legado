@@ -26,6 +26,7 @@ class ProjectController extends Controller
         $filter_by_tags = $request->query('tags') ? explode(',',$request->query('tags')) : [];
         $all_projects = Project::with('authors', 'feedbacks', 'tags')
                             ->withAvg('feedbacks', 'rating')
+                            ->withCount('favoritedBy')
                             ->latest()
                             ->get();
         $all_tags = Tag::all();

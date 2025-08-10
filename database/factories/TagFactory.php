@@ -15,7 +15,7 @@ class TagFactory extends Factory
      * @return array<string, mixed>
      */
 
-    protected $colors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6'];
+    protected $colors = ['#a995c9', '#f2b8c6', '#77b8a1', '#f0c88d', '#a0bbe3'];
     protected $tags = ['javascript','java','php','python','vue','inertia','laravel','typescript'];
     public function definition(): array
     {

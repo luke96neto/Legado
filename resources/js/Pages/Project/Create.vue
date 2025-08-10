@@ -14,7 +14,7 @@ const submit = (form) => {
     });
 };
 
-import ProjectForm from '@/Components/Project/ProjectForm.vue';
+import ProjectForm from '@/components/Project/ProjectForm.vue';
 
 </script>
 

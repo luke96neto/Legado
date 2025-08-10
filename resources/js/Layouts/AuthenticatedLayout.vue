@@ -6,25 +6,24 @@ import DropdownLink from "@/components/DropdownLink.vue";
 import NavLink from "@/components/NavLink.vue";
 import ResponsiveNavLink from "@/components/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/vue3";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
   <div>
-    <div class="min-h-screen bg-gray-900">
+    <div class="min-h-screen bg-background">
       <nav
-        class="border-b border-gray-700 bg-gray-800"
+        class="border-b bg-sidebar"
       >
-        <!-- Primary Navigation Menu -->
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div class="flex h-16 justify-between">
             <div class="flex">
-              <!-- Logo -->
               <div class="flex shrink-3 items-center">
                 <Link :href="route('dashboard')">
                   <img src="/img/globo-Legado.png"
-                    class="block h-16 w-auto fill-current text-white top-0 left-0 z-50 p-0"
+                    class="block h-12 w-auto fill-current top-0 left-0 z-30 p-0"
                   />
                 </Link>
               </div>
@@ -45,79 +44,83 @@ const showingNavigationDropdown = ref(false);
                 </NavLink>
               </div>
             </div>
-
-            <div class="hidden sm:ms-6 sm:flex sm:items-center">
-              <!-- Settings Dropdown -->
-              <div class="relative ms-3">
-                <Dropdown align="right" width="48">
-                  <template #trigger>
-                    <span class="inline-flex rounded-md">
-                      <button
-                        type="button"
-                        class="inline-flex items-center rounded-md border border-transparent px-3 py-2 text-sm font-medium leading-4 transition duration-150 ease-in-out focus:outline-hidden bg-gray-800 text-gray-400 hover:text-gray-300"
-                      >
-                        {{ $page.props.auth.user.nickname }}
-
-                        <svg
-                          class="-me-0.5 ms-2 h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
+            <div class="sm:ms-6 sm:flex sm:items-center space-x-4">
+              <div class="hidden sm:ms-6 sm:flex sm:items-center">
+                <div class="relative ms-3">
+                  <Dropdown align="right" width="48">
+                    <template #trigger>
+                      <span class="inline-flex rounded-md">
+                        <button
+                          type="button"
+                          class="inline-flex items-center rounded-md border px-3 py-2 text-sm font-medium leading-4 transition duration-150 ease-in-out focus:outline-hidden bg-background border-input text-foreground"
                         >
-                          <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                    </span>
-                  </template>
-
-                  <template #content>
-                    <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
-                    <DropdownLink :href="route('logout')" method="post" as="button">
-                      Log Out
-                    </DropdownLink>
-                  </template>
-                </Dropdown>
+                          {{ $page.props.auth.user.nickname }}
+  
+                          <svg
+                            class="-me-0.5 ms-2 h-4 w-4"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </span>
+                    </template>
+  
+                    <template #content>
+                      <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+                      <DropdownLink :href="route('logout')" method="post" as="button">
+                        Log Out
+                      </DropdownLink>
+                    </template>
+                  </Dropdown>
+                </div>
               </div>
-            </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-              <button
-                @click="showingNavigationDropdown = !showingNavigationDropdown"
-                class="inline-flex items-center justify-center rounded-md p-2 transition duration-150 ease-in-out focus:outline-hidden hover:bg-white hover:text-white focus:bg-white focus:text-white"
-              >
-                <svg
-                  class="h-6 w-6"
-                  stroke="currentColor"
-                  fill="none"
-                  viewBox="0 0 24 24"
+  
+              <div class="-me-2 flex items-center sm:hidden">
+                <button
+                  @click="showingNavigationDropdown = !showingNavigationDropdown"
+                  class="inline-flex items-center justify-center rounded-md p-2 transition duration-150 ease-in-out focus:outline-hidden hover:bg-primary/90 hover:text-white focus:bg-white focus:text-white"
                 >
-                  <path
-                    :class="{
-                      hidden: showingNavigationDropdown,
-                      'inline-flex': !showingNavigationDropdown,
-                    }"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                  <path
-                    :class="{
-                      hidden: !showingNavigationDropdown,
-                      'inline-flex': showingNavigationDropdown,
-                    }"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
+                  <svg
+                    class="h-6 w-6"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      :class="{
+                        hidden: showingNavigationDropdown,
+                        'inline-flex': !showingNavigationDropdown,
+                      }"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                    <path
+                      :class="{
+                        hidden: !showingNavigationDropdown,
+                        'inline-flex': showingNavigationDropdown,
+                      }"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+            <Avatar>
+              <AvatarImage :src="'/storage/' + $page.props.auth.user.image" alt="@unovue" />
+              <AvatarFallback>Profile image</AvatarFallback>
+            </Avatar>
             </div>
           </div>
         </div>
