@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/vue3';
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import ProjectForm from '@/Components/Project/ProjectForm.vue';
+import ProjectForm from '@/components/Project/ProjectForm.vue';
 
 const props = defineProps({
   project: Object,

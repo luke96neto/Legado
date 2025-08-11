@@ -33,7 +33,10 @@ const props = defineProps({
           <p class="text-purple-400 text-2xl font-bold">{{ completedProjects }}</p>
           <p class="text-sm">Projetos concluídos</p>
         </div>
-        <div class="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+        <div>
+          <p class="text-purple-400 text-2xl font-bold">{{ draftProjects }}</p>
+          <p class="text-sm">Rascunhos</p>
+        </div>
       </div>
       <!-- Projetos exemplo -->
       <section class="mb-10">
