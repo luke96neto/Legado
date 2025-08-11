@@ -35,7 +35,7 @@ console.log(user.image);
         <div class="py-12">
             <div class="mx-auto max-w-7xl space-y-6 sm:px-6 lg:px-8">
                 <div
-                    class="bg-white p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800"
+                    class="bg-white p-4 shadow-sm sm:rounded-lg sm:p-8 dark:bg-gray-800"
                 >
                     <UpdateProfileInformationForm
                         :must-verify-email="mustVerifyEmail"
@@ -44,7 +44,7 @@ console.log(user.image);
                     />
                 </div>
                 <div
-                    class="bg-white dark:bg-gray-800 p-4 shadow sm:rounded-lg sm:p-8"
+                    class="bg-white dark:bg-gray-800 p-4 shadow-sm sm:rounded-lg sm:p-8"
                 >
                     <section>
                         <header>
@@ -59,7 +59,7 @@ console.log(user.image);
                         <div class="w-full">
                             <label for="select_repo" class="block text-sm font-medium text-gray-300">Selecionar repositório</label>
                             <select 
-                                class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
                                 >
                                 <option>Seus projetos favoritados:</option>
                                 <option v-for="project in favoritedProjects" :key="project.id">
@@ -72,13 +72,13 @@ console.log(user.image);
                 </div>
 
                 <div
-                    class="bg-white dark:bg-gray-800 p-4 shadow sm:rounded-lg sm:p-8"
+                    class="bg-white dark:bg-gray-800 p-4 shadow-sm sm:rounded-lg sm:p-8"
                 >
                     <UpdatePasswordForm class="max-w-xl" />
                 </div>
 
                 <div
-                    class="bg-black p-4 shadow sm:rounded-lg sm:p-8 dark:bg-gray-800"
+                    class="bg-black p-4 shadow-sm sm:rounded-lg sm:p-8 dark:bg-gray-800"
                 >
                     <DeleteUserForm class="max-w-xl" />
                 </div>

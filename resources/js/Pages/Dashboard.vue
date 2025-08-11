@@ -33,21 +33,8 @@ const props = defineProps({
           <p class="text-purple-400 text-2xl font-bold">{{ completedProjects }}</p>
           <p class="text-sm">Projetos concluídos</p>
         </div>
-        <div>
-          <p class="text-purple-400 text-2xl font-bold">{{ draftProjects }}</p>
-          <p class="text-sm">Rascunhos</p>
-        </div>
+        <div class="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
       </div>
-
-      <!-- Campo de pesquisa -->
-      <div class="flex justify-center mb-10">
-        <input
-          type="text"
-          placeholder="Pesquisar..."
-          class="w-full sm:w-1/2 px-4 py-2 rounded-full text-black"
-        />
-      </div>
-
       <!-- Projetos exemplo -->
       <section class="mb-10">
         <h2 class="text-white text-lg font-bold mb-2">Exemplos</h2>

@@ -14,7 +14,7 @@ const submit = (form) => {
     });
 };
 
-import ProjectForm from '@/Components/Project/ProjectForm.vue';
+import ProjectForm from '@/components/Project/ProjectForm.vue';
 
 </script>
 
@@ -52,7 +52,7 @@ import ProjectForm from '@/Components/Project/ProjectForm.vue';
                         v-model="form.title"
                         type="text"
                         id="title"
-                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
                         :class="{ 'border-red-500': form.errors.title }"
                         required 
                     />
@@ -63,7 +63,7 @@ import ProjectForm from '@/Components/Project/ProjectForm.vue';
                     <textarea
                         v-model="form.description"
                         id="description"
-                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
                         :class="{'border-red-500' : form.errors.description}"
                         rows="4" 
                         required>
@@ -75,7 +75,7 @@ import ProjectForm from '@/Components/Project/ProjectForm.vue';
                     <select 
                         v-model="form.status"
                         id="status"
-                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
                     >
                         <option value="rascunho">Rascunho</option>
                         <option value="em_andamento">Em andamento</option>
@@ -91,7 +91,7 @@ import ProjectForm from '@/Components/Project/ProjectForm.vue';
                         v-model="collaboratorsInput"
                         type="text"
                         id="collaborators"
-                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
                     >
                     <p v-if="form.errors.authors" class="mt-1 text-sm text-red-500">
                         {{ form.errors.authors }}
@@ -105,7 +105,7 @@ import ProjectForm from '@/Components/Project/ProjectForm.vue';
                         @input="form.image = $event.target.files[0]"
                         accept="image/*" 
                         class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4
-                        file:rounded file:border-0
+                        file:rounded-sm file:border-0
                         file:text-sm file:font-semibold
                         file:bg-purple-600 file:text-white
                         hover:file:bg-purple-900
@@ -125,7 +125,7 @@ import ProjectForm from '@/Components/Project/ProjectForm.vue';
                             v-model="form.repo_url"
                             type="url" 
                             id="repo_url"
-                            class="mt-1 w-full bg-gray-300 block border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            class="mt-1 w-full bg-gray-300 block border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
                             :class="{ 'border-red-500': form.errors.repo_url }"
                             placeholder="https://github.com/usuario/projeto"
                         >
@@ -138,7 +138,7 @@ import ProjectForm from '@/Components/Project/ProjectForm.vue';
                         <select 
                             v-model="selectedRepo"
                             id="select_repo"
-                            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
                             >
                             <option :value="null">Selecione um repositório</option>
                             <option v-for="repo in repositories" :key="repo.id" :value="repo">
@@ -149,7 +149,7 @@ import ProjectForm from '@/Components/Project/ProjectForm.vue';
                 </div>
                 <button 
                     type="submit"
-                    class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-900 transition-colors"
+                    class="px-4 py-2 bg-purple-600 text-white rounded-sm hover:bg-purple-900 transition-colors"
                     :disabled="form.processing"
                 >
                     <span v-if="form.processing">Enviando...</span>

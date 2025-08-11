@@ -1,8 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, usePage } from '@inertiajs/vue3'; // Adicionado usePage
-import StarRating from '@/Components/StarRating.vue'; // Importe seu componente StarRating
-import FavoriteButton from '@/Components/FavoriteButton.vue';
+import StarRating from '@/components/StarRating.vue'; // Importe seu componente StarRating
+import FavoriteButton from '@/components/FavoriteButton.vue';
 
 // Define as props que este componente Vue espera receber do Laravel
 const props = defineProps({
@@ -101,19 +101,19 @@ const userIsLoggedIn = !!page.props.auth.user;
                 </template>
 
                 <template v-if="page.props.flash?.success">
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4"
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-sm relative mt-4"
                         role="alert">
                         {{ page.props.flash.success }}
                     </div>
                 </template>
                 <template v-if="page.props.flash?.error">
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4"
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-sm relative mt-4"
                         role="alert">
                         {{ page.props.flash.error }}
                     </div>
                 </template>
                 <template v-if="page.props.errors?.rating">
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4"
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-sm relative mt-4"
                         role="alert">
                         {{ page.props.errors.rating }}
                     </div>
@@ -121,7 +121,7 @@ const userIsLoggedIn = !!page.props.auth.user;
 
             </div>
             <Link :href="route('project.index')">
-            <button class="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-blue-700 transition-colors">
+            <button class="mt-4 px-4 py-2 bg-purple-600 text-white rounded-sm hover:bg-blue-700 transition-colors">
                 Voltar para Projetos
             </button>
             </Link>

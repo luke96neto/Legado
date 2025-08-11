@@ -1,4 +1,5 @@
 <script setup>
+import ProjectCard from '@/components/ProjectCard.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
@@ -52,6 +53,7 @@ function submitForm() {
 function isTagSelected(tagId) {
     return form.selectedTags.includes(tagId.toString());
 }
+
 </script>
 
 <template>
@@ -64,18 +66,19 @@ function isTagSelected(tagId) {
             <div class="flex justify-between">
                 <div class="mb-6">
                     <Link :href="route('project.create')"
-                        class="inline-flex items-center px-4 py-2 bg-purple-800 text-white rounded hover:bg-blue-700 transition-colors">
-                        Criar Novo Projeto
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-sm hover:bg-secondary/80 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-plus"><circle cx="12" cy="12" r="10"></circle><path d="M8 12h8"></path><path d="M12 8v8"></path></svg>
+                        Adicionar Projeto
                     </Link>
                 </div>
                 
                 <div class="flex items-center gap-2">
-                    <span class="text-gray-300">Tags:</span>
+                    <span class="text-foreground">Tags:</span>
                     <div class="flex flex-wrap gap-2 mt-2 mb-2">
                         <span
                             v-for="tag in props.all_tags"
                             :key="tag.id"
-                            class="text-xs px-3 py-1 rounded-full bg-purple-600 text-white hover:cursor-pointer"
+                            class="text-xs px-3 py-1 rounded-full bg-secondary hover:bg-secondary/80 hover:text-secondary-foreground/90 text-secondary-foreground hover:cursor-pointer"
                             @click="toggleTag(tag.id)"
                             >
                             {{ tag.name }}
@@ -88,7 +91,7 @@ function isTagSelected(tagId) {
             </div>
             
             <div class="mb-3">
-                <label class="text-white hover:cursor-pointer">
+                <label class="text-foreground hover:cursor-pointer">
                     <input class="hover:cursor-pointer" type="checkbox" :checked="+form.isFavorite == 1" v-on:change="setFavorites" /> 
                     Favoritos
                 </label>
@@ -112,12 +115,10 @@ function isTagSelected(tagId) {
                             class="inline-flex items-center px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition-colors">
                             Editar
                             </Link>
-                </div>
-            </li>
-
-        </ul>
-
-            <div v-if="hasItems" class="mt-8 flex justify-center">
+                    </div>
+                </li>
+              </ul>
+              <div v-if="hasItems" class="mt-8 flex justify-center">
                 <nav class="flex items-center gap-1">
                     <Link 
                         v-for="(link, index) in projects.links"
@@ -125,8 +126,8 @@ function isTagSelected(tagId) {
                         :href="link.url || '#'"
                         :class="{
                             'px-4 py-2 rounded-md': true,
-                            'bg-purple-600 text-white': link.active,
-                            'bg-white text-gray-700 hover:bg-gray-100': !link.active && link.url,
+                            'bg-primary text-background': link.active,
+                            'bg-card text-foreground/80 hover:bg-secondary/90': !link.active && link.url,
                             'text-gray-400 cursor-not-allowed': !link.url
                         }"
                         v-html="link.label"
