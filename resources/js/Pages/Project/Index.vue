@@ -1,9 +1,10 @@
 <script setup>
 import ProjectCard from '@/components/ProjectCard.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
-import { onMounted, reactive } from 'vue';
+import { reactive } from 'vue';
+import Card from '@/Components/Card.vue';
 
 const props = defineProps({
     projects: Object,
@@ -97,12 +98,27 @@ function isTagSelected(tagId) {
             </div>
             
             <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <li v-for="project in projects.data" :key="project.id"
-                    class="transition-shadow duration-300">
-                    <ProjectCard :project="project"></ProjectCard>
+                <li v-for="project in projects.data" :key="project.id">
+                     <Card
+                        :title="project.title"
+                        :image="project.image"
+                        :description="project.description"
+                        :link="route('project.show', project.slug)"
+                        :status="project.status"
+                        :tags="project.tags"
+                        :averageRating="project.feedbacks_avg_rating"
+                        fallback="/meus-projetos/default.png"
+                        />
+                        <!-- Botão de edição para o autor -->
+                    <div v-if="isAuthor(project)" class="mt-4 px-6 pb-4">
+                        <Link :href="route('project.edit', project.slug)"
+                            class="inline-flex items-center px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition-colors">
+                            Editar
+                            </Link>
+                    </div>
                 </li>
-            </ul>
-            <div v-if="hasItems" class="mt-8 flex justify-center">
+              </ul>
+              <div v-if="hasItems" class="mt-8 flex justify-center">
                 <nav class="flex items-center gap-1">
                     <Link 
                         v-for="(link, index) in projects.links"

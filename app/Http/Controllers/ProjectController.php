@@ -200,7 +200,7 @@ class ProjectController extends Controller
         $user = Auth::user();
 
         $totalProjects = Project::count();
-        $projectsInProgress = Project::where('status', 'em andamento')->count();
+        $projectsInProgress = Project::where('status', 'em_andamento')->count();
         $completedProjects = Project::where('status', 'concluido')->count();
         $draftProjects = Project::where('status', 'rascunho')->count();
 

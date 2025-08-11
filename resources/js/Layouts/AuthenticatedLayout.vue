@@ -31,7 +31,6 @@ const showingNavigationDropdown = ref(false);
 									class="block h-12 w-auto fill-current top-0 left-0 z-30 p-0" />
 								</Link>
 							</div>
-
 							<!-- Navigation Links -->
 							<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
 								<NavLink :href="route('dashboard')" :active="route().current('dashboard')">
@@ -75,7 +74,6 @@ const showingNavigationDropdown = ref(false);
 												<button type="button"
 													class="inline-flex items-center rounded-md border px-3 py-2 text-sm font-medium leading-4 transition duration-150 ease-in-out bg-background hover:bg-foreground/30 border-input">
 													{{ $page.props.auth.user.nickname }}
-
 													<svg class="-me-0.5 ms-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
 														viewBox="0 0 20 20" fill="currentColor">
 														<path fill-rule="evenodd"
@@ -86,11 +84,12 @@ const showingNavigationDropdown = ref(false);
 											</span>
 										</template>
 										<template #content>
-											<DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
-											<DropdownLink :href="route('logout')" method="post" as="button">
-												Log Out
-											</DropdownLink>
-										</template>
+											<DropdownLink :href="route('profile.show', $page.props.auth.user.nickname)"> Profile </DropdownLink>
+                      <DropdownLink :href="route('profile.edit')"> Settings </DropdownLink>
+                      <DropdownLink :href="route('logout')" method="post" as="button">
+                        Log Out
+                      </DropdownLink>
+                    </template>
 									</Dropdown>
 								</div>
 								<Avatar>
