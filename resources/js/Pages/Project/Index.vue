@@ -110,8 +110,8 @@ function isTagSelected(tagId) {
                         :href="link.url || '#'"
                         :class="{
                             'px-4 py-2 rounded-md': true,
-                            'bg-purple-600 text-white': link.active,
-                            'bg-white text-gray-700 hover:bg-gray-100': !link.active && link.url,
+                            'bg-primary text-background': link.active,
+                            'bg-card text-foreground/80 hover:bg-secondary/90': !link.active && link.url,
                             'text-gray-400 cursor-not-allowed': !link.url
                         }"
                         v-html="link.label"
