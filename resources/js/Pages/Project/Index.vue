@@ -22,11 +22,6 @@ const form = reactive({
     ...props.formData
 })
 
-function isAuthor(project) {
-    if (!user) return false;
-    return project.authors.some(author => author.user_id === user.id);
-}
-
 function setFavorites() {
     form.isFavorite = (+form.isFavorite + 1) % 2;
     submitForm();
@@ -106,16 +101,11 @@ function isTagSelected(tagId) {
                         :link="route('project.show', project.slug)"
                         :status="project.status"
                         :tags="project.tags"
+                        :ownerId="project.user_id"
+                        :slug="project.slug"
                         :averageRating="project.feedbacks_avg_rating"
                         fallback="/project-images/default.jpg"
-                        />
-                        <!-- Botão de edição para o autor -->
-                    <div v-if="isAuthor(project)" class="mt-4 px-6 pb-4">
-                        <Link :href="route('project.edit', project.slug)"
-                            class="inline-flex items-center px-3 py-1 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition-colors">
-                            Editar
-                            </Link>
-                    </div>
+                    />
                 </li>
                 </ul>
                 <div v-if="hasItems" class="mt-8 flex justify-center">
