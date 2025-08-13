@@ -99,7 +99,7 @@ function isTagSelected(tagId) {
             
             <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <li v-for="project in projects.data" :key="project.id">
-                     <Card
+                    <Card
                         :title="project.title"
                         :image="project.image"
                         :description="project.description"
@@ -107,7 +107,7 @@ function isTagSelected(tagId) {
                         :status="project.status"
                         :tags="project.tags"
                         :averageRating="project.feedbacks_avg_rating"
-                        fallback="/meus-projetos/default.png"
+                        fallback="/project-images/default.jpg"
                         />
                         <!-- Botão de edição para o autor -->
                     <div v-if="isAuthor(project)" class="mt-4 px-6 pb-4">
@@ -117,8 +117,8 @@ function isTagSelected(tagId) {
                             </Link>
                     </div>
                 </li>
-              </ul>
-              <div v-if="hasItems" class="mt-8 flex justify-center">
+                </ul>
+                <div v-if="hasItems" class="mt-8 flex justify-center">
                 <nav class="flex items-center gap-1">
                     <Link 
                         v-for="(link, index) in projects.links"

@@ -9,7 +9,7 @@ const props = defineProps({
   averageRating: Number,
   fallback: {
     type: String,
-    default: '/default.png'
+    default: '/default.jpg'
   }
 });
 </script>
@@ -17,24 +17,24 @@ const props = defineProps({
 <template>
   <a
     :href="link"
-    class="relative block rounded-xl overflow-hidden shadow-lg cursor-pointer group bg-gray-800"
+    class="relative block rounded-xl overflow-hidden shadow-lg cursor-pointer group bg-card"
     :aria-label="title || 'Card sem título'"
   >
     <figure class="relative w-full h-48">
       <img
-        :src="image ? `/storage/${image}` : fallback"
+        :src="image ? `/storage/${image}` : `/storage/${fallback}`"
         :alt="title || 'Imagem padrão do card'"
         loading="lazy"
         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
       />
       <div
         v-if="!image"
-        class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-gray-300 font-semibold"
+        class="absolute inset-0 bg-secondary/80 flex items-center justify-center text-foreground/30 font-semibold"
       >
         Sem imagem
       </div>
       <span
-        class="absolute top-2 left-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full"
+        class="absolute top-2 left-2 bg-chart-4 text-white text-xs px-2 py-1 rounded-full"
         v-if="status"
       >
         {{ status }}
