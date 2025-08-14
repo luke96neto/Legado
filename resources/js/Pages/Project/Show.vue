@@ -1,23 +1,20 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link, usePage } from '@inertiajs/vue3'; // Adicionado usePage
-import StarRating from '@/components/StarRating.vue'; // Importe seu componente StarRating
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import StarRating from '@/components/StarRating.vue';
 import FavoriteButton from '@/components/FavoriteButton.vue';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
-// Define as props que este componente Vue espera receber do Laravel
 const props = defineProps({
-    project: Object, // O objeto project, que agora deve incluir avg_rating, ratings_count, user_rating
+    project: Object,
 });
 
-const page = usePage(); // Hook para acessar as props globais do Inertia (como auth.user e flash)
-
-// Lógica para obter a avaliação atual do usuário, se existir
+const page = usePage();
 const currentUserRating = props.project.user_rating ? props.project.user_rating.rating : 0;
 const currentUserFavorited = props.project.user_favorited ? true : false;
-
-// Lógica para verificar se o usuário está logado
 const userIsLoggedIn = !!page.props.auth.user;
-
 </script>
 
 <template>
@@ -25,107 +22,133 @@ const userIsLoggedIn = !!page.props.auth.user;
     <Head :title="project.title" />
 
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="text-xl font-semibold leading-tight text- dark:text-gray-200">
-                Projeto: {{ project.title }}
-            </h2>
-        </template>
-        <div class="container mx-auto px-4 py-8">
-            <div class="bg-black rounded-lg shadow-md p-6">
-                <div class="flex justify-between">
-                    <h2 class="text-xl font-semibold text-gray-300 mb-2">
-                        <span class="text-purple-600">Título:</span> {{ project.title }}
-                    </h2>
-                    <favorite-button :project-id="project.id" :current-fav-value="currentUserFavorited"></favorite-button>
+
+        <div class="container max-w-5xl mx-auto px-4 py-8">
+            <Card class="border border-ring bg-card rounded-lg">
+                <CardHeader class="border-b border-ring">
+                    <div class="flex justify-between items-center">
+                        <CardTitle class="text-2xl font-semibold text-foreground">
+                            {{ project.title }}
+                        </CardTitle>
+                        <FavoriteButton :project-id="project.id" :current-fav-value="currentUserFavorited"
+                            class="text-primary" />
+                    </div>
+                </CardHeader>
+
+                <CardContent class="pt-6 grid gap-6">
+                    <div>
+                        <h3 class="text-lg font-medium text-foreground mb-2">Descrição</h3>
+                        <p class="text-muted-foreground">{{ project.description || 'Nenhuma descrição fornecida' }}</p>
+                    </div>
+
+                    <div v-if="project.image" class="rounded-md overflow-hidden border border-ring">
+                        <img :src="`/storage/${project.image}`" :alt="`Imagem do projeto ${project.title}`"
+                            class="w-full h-auto max-h-96 object-contain">
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div>
+                            <h3 class="text-lg font-medium text-foreground mb-2">Autores</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <Badge v-for="author in project.authors" :key="author.id" variant="secondary">
+                                    {{ author.name }}
+                                </Badge>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-medium text-foreground mb-2">Status</h3>
+                            <Badge :variant="project.status === 'concluido' ? 'success' :
+                                project.status === 'em_andamento' ? 'warning' : 'default'
+                                ">
+                                {{
+                                    project.status === 'em_andamento' ? 'Em andamento' :
+                                        project.status === 'concluido' ? 'Concluído' : 'Rascunho'
+                                }}
+                            </Badge>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-medium text-foreground mb-2">Repositório</h3>
+                            <div v-if="project.repo_url">
+                                <a :href="project.repo_url" target="_blank"
+                                    class="text-primary hover:underline inline-flex items-center gap-1">
+                                    <span>Ver no GitHub</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="lucide lucide-external-link">
+                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                        <polyline points="15 3 21 3 21 9" />
+                                        <line x1="10" x2="21" y1="14" y2="3" />
+                                    </svg>
+                                </a>
+                            </div>
+                            <p v-else class="text-muted-foreground">Nenhum link fornecido</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-ring pt-6">
+                        <h3 class="text-xl font-semibold text-foreground mb-4">Avaliações</h3>
+
+                        <div v-if="project.ratings_count > 0" class="flex items-center gap-4 mb-6">
+                            <div class="text-4xl font-bold text-foreground">
+                                {{ parseFloat(project.average_rating).toFixed(1) }}
+                            </div>
+                            <div>
+                                <p class="text-sm text-muted-foreground mt-1">
+                                    Baseado em {{ project.ratings_count }} avaliações
+                                </p>
+                            </div>
+                        </div>
+                        <p v-else class="text-muted-foreground mb-6">Ainda não há avaliações para este projeto.</p>
+
+                        <div v-if="userIsLoggedIn">
+                            <h4 class="text-lg font-medium text-foreground mb-3">Sua Avaliação</h4>
+                            <StarRating :project-id="project.id" :current-rating="currentUserRating" />
+                        </div>
+                        <div v-else class="text-center py-4 border-t border-ring mt-4">
+                            <p class="text-muted-foreground">
+                                <Link :href="route('login')" class="text-primary hover:underline">
+                                Faça login
+                                </Link>
+                                para avaliar este projeto.
+                            </p>
+                        </div>
+                    </div>
+                </CardContent>
+
+                <CardFooter class="border-t border-ring flex justify-between items-center pt-6">
+                    <Link :href="route('project.index')">
+                    <Button variant="outline">
+                        Voltar para Projetos
+                    </Button>
+                    </Link>
+
+                    <div v-if="page.props.auth.user?.id === project.user_id">
+                        <Link :href="route('project.edit', project.slug)">
+                        <Button variant="secondary">
+                            Editar Projeto
+                        </Button>
+                        </Link>
+                    </div>
+                </CardFooter>
+            </Card>
+
+            <template v-if="page.props.flash?.success">
+                <div class="mt-4 p-4 bg-success/15 text-success border border-success rounded-lg">
+                    {{ page.props.flash.success }}
                 </div>
-                <p class="text-gray-300 mb-3">
-                    <span class="text-purple-600">Descrição:</span> {{ project.description }}
-                </p>
-                <div v-if="project.image">
-                    <p>Imagem do projeto:</p>
-                    <img class="m-3" :src="`/storage/${project.image}`" :alt="`Imagem do projeto ${project.title}`">
+            </template>
+            <template v-if="page.props.flash?.error">
+                <div class="mt-4 p-4 bg-destructive/15 text-destructive border border-destructive rounded-lg">
+                    {{ page.props.flash.error }}
                 </div>
-
-                <div class="border-t pt-3">
-                    <p class="text-sm text-gray-300">Autores:</p>
-                    <div class="flex flex-wrap gap-2 mt-2">
-                        <span v-for="author in project.authors" :key="author.id"
-                            class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">
-                            {{ author.name }}
-                        </span>
-                    </div>
+            </template>
+            <template v-if="page.props.errors?.rating">
+                <div class="mt-4 p-4 bg-destructive/15 text-destructive border border-destructive rounded-lg">
+                    {{ page.props.errors.rating }}
                 </div>
-                <div class="mt-2 border-t pt-3">
-                    <p class="text-sm text-gray-300">Link repositório:</p>
-                    <div class="flex flex-wrap gap-2 mt-2">
-                        <a :href="project.repo_url" target="_blank"
-                            class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">
-                            {{ project.repo_url }}
-                        </a>
-                    </div>
-                </div>
-                <div class="mt-2 border-t pt-3">
-                    <p class="text-sm text-gray-300">Status:</p>
-                    <div class="flex flex-wrap gap-2 mt-2">
-                        <span class="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full">
-                            {{ project.status }}
-                        </span>
-                    </div>
-                </div>
-
-                <hr class="my-6">
-
-                <h3 class="text-xl text-white font-semibold mb-3">Avaliações</h3>
-                <template v-if="project.ratings_count > 0">
-                    <p class="text-lg text-white mb-2">Média de Avaliações:
-                        <strong class="text-yellow-500">
-                            {{ parseFloat(project.average_rating).toFixed(1) }}
-                            <i class="fa-solid fa-star"></i>
-                        </strong>
-                        (de {{ project.ratings_count }} avaliações)
-                    </p>
-                </template>
-                <template v-else>
-                    <p class="text-gray-300 mb-2">Ainda não há avaliações para este projeto.</p>
-                </template>
-
-                <template v-if="userIsLoggedIn">
-                    <h4 class="text-lg text-white font-semibold mt-6 mb-3">Sua Avaliação:</h4>
-                    <star-rating :project-id="project.id" :current-rating="currentUserRating"></star-rating>
-                </template>
-                <template v-else>
-                    <p class="text-blue-600 mt-6">
-                        <Link :href="route('login')" class="underline hover:no-underline">Faça login</Link> para avaliar
-                        este projeto.
-                    </p>
-                </template>
-
-                <template v-if="page.props.flash?.success">
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-sm relative mt-4"
-                        role="alert">
-                        {{ page.props.flash.success }}
-                    </div>
-                </template>
-                <template v-if="page.props.flash?.error">
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-sm relative mt-4"
-                        role="alert">
-                        {{ page.props.flash.error }}
-                    </div>
-                </template>
-                <template v-if="page.props.errors?.rating">
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-sm relative mt-4"
-                        role="alert">
-                        {{ page.props.errors.rating }}
-                    </div>
-                </template>
-
-            </div>
-            <Link :href="route('project.index')">
-            <button class="mt-4 px-4 py-2 bg-purple-600 text-white rounded-sm hover:bg-blue-700 transition-colors">
-                Voltar para Projetos
-            </button>
-            </Link>
+            </template>
         </div>
     </AuthenticatedLayout>
-
 </template>
