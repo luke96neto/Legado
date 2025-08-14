@@ -1,6 +1,26 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { 
+    TagsInput, 
+    TagsInputInput, 
+    TagsInputItem, 
+    TagsInputItemDelete, 
+    TagsInputItemText 
+} from "@/components/ui/tags-input";
 
 const repositories = ref([]);
 const collaborators = ref([]);
@@ -9,6 +29,8 @@ const loadingCollabs = ref(false);
 const collaboratorsInput = ref('');
 const isLoading = ref(false);
 const editMode = ref(false);
+const user = usePage().props.auth.user;
+const modelValue = ref([`${user.nickname}`]);
 
 const props = defineProps({
     project: Object | null,
@@ -22,7 +44,7 @@ const loadRepositories = async () => {
         const response = await axios.get('/github/repos');
         repositories.value = response.data;
     } catch (error) {
-        console.error('Falha ao carregar os repositorios:', error); // so p testar, adicionar um melhor tratamento dps
+        console.error('Falha ao carregar os repositorios:', error);
     } finally {
         isLoading.value = false;
     }
@@ -79,6 +101,8 @@ const initForm = () => {
     }
 };
 
+console.log(repositories);
+
 onMounted(() => {
     initForm();
     console.log(editMode.value ? 'Edit mode' : 'Create mode');
@@ -87,100 +111,127 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="container max-w-xl mx-auto px-4 py-8 border border-gray-500 bg-gray-800">
-        <form @submit.prevent="submit" class="space-y-6">
-            <!-- <div class="flex gap-4 justify-between"> -->
-            <div class="w-full" v-if="!editMode">
-                <label for="select_repo" class="block text-sm font-medium text-gray-300">Selecionar repositório</label>
-                <select v-model="selectedRepo" id="select_repo"
-                    class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50"
-                    :disabled="isLoading">
-                    <option :value="null">Selecione um repositório</option>
-                    <option v-for="repo in repositories" :key="repo.id" :value="repo">
-                        {{ repo.name }}
-                    </option>
-                </select>
+    <div class="container max-w-5xl mx-auto px-4 py-8 border border-ring bg-card rounded">
+        <form @submit.prevent="submit" class="grid gap-6">
+            <div class="flex justify-between gap-4 items-center">
+                <div class="grid gap-3 w-full">
+                    <Label>Selecionar um repositório</Label>
+                    <Select class="w-full">
+                        <SelectTrigger clas>
+                            <SelectValue placeholder="Selecione um repositório" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel v-if="repositories">repositorio</SelectLabel>
+                                <SelectLabel v-else>Sem repositórios</SelectLabel>
+                                <SelectItem
+                                    v-for="repo in repositories" :key="repo.id" :value="repo"
+                                >
+                                {{ repositories }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div class="grid gap-3 w-full">
+                    <Label for="repo_url" >URL do repositório</Label>
+                    <Input
+                        id="repo_url"
+                        type="url"
+                        v-model="form.repo_url"
+                        placeholder="https://github.com/usuario/projeto"
+                    />
+                    <p v-if="form.errors.repo_url" class="mt-1 text-sm text-red-500">
+                        {{ form.errors.repo_url }}
+                    </p>
+                </div>
             </div>
             <div class="w-full">
-                <label for="repo_url" class="block text-sm font-medium text-gray-300">URL do repositório</label>
-                <input v-model="form.repo_url" type="url" id="repo_url"
-                    class="mt-1 w-full bg-gray-300 block border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
-                    :class="{ 'border-red-500': form.errors.repo_url }" readonly
-                    placeholder="https://github.com/usuario/projeto">
-                <p v-if="form.errors.repo_url" class="mt-1 text-sm text-red-500">
-                    {{ form.errors.repo_url }}
+                <Label for="title" class="pb-2">Título</Label>
+                <Input
+                    id="title"
+                    type="text"
+                    v-model="form.title"
+                />
+                <p v-if="form.errors.title" class="mt-1 text-sm text-red-500">
+                    {{ form.errors.title }}
                 </p>
             </div>
-            <!-- </div> -->
-            <div>
-                <label for="title" class="block text-sm font-medium text-gray-300">Título</label>
-                <input v-model="form.title" type="text" id="title"
-                    class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
-                    :class="{ 'border-red-500': form.errors.title }" required />
-            </div>
-
-            <div>
-                <label for="description" class="block text-sm font-medium text-gray-300">Descrição</label>
-                <textarea v-model="form.description" id="description"
-                    class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500"
-                    :class="{ 'border-red-500': form.errors.description }" rows="4" required>
-            </textarea>
-            </div>
-
-            <div>
-                <label for="status" class="block text-sm font-medium text-gray-300">Status</label>
-                <select v-model="form.status" id="status"
-                    class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500">
-                    <option value="rascunho">Rascunho</option>
-                    <option value="em_andamento">Em andamento</option>
-                    <option value="concluido">Concluído</option>
-                </select>
-            </div>
-
-            <div class="mt-4">
-                <label for="collaborators" class="block text-sm font-medium text-gray-300">
-                    Autor(es)
-                </label>
-                <input v-model="collaboratorsInput" type="text" id="collaborators"
-                    class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50"
-                    :disabled="loadingCollabs || isLoading" />
-                <p v-if="form.errors.authors" class="mt-1 text-sm text-red-500">
-                    {{ form.errors.authors }}
+            <div class="w-full">
+                <Label for="descricao" class="pb-2">Descrição</Label>
+                <Textarea 
+                    class="h-50"
+                    id="descricao"
+                    type="text"
+                    v-model="form.descricao"
+                />
+                <p v-if="form.errors.descricao" class="mt-1 text-sm text-red-500">
+                    {{ form.errors.descricao }}
                 </p>
             </div>
-
-            <div>
-                <label for="tags" class="block text-sm font-medium text-gray-300">Tags</label>
-                <select v-model="form.tags" id="tags"
-                    class="mt-1 block w-full bg-gray-300 border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-blue-500">
-                    <option v-for="tag in allTags" :key="tag.id" :value="tag.id">{{ tag.name }}</option>
-                </select>
+            <div class="flex justify-between gap-4">
+                <div class="grid gap-3 w-100 ">
+                    <Label>Adicionar autores</Label>
+                    <TagsInput v-model="modelValue">
+                        <TagsInputItem v-for="item in modelValue" :key="item" :value="item">
+                            <TagsInputItemText />
+                            <TagsInputItemDelete />
+                        </TagsInputItem>
+                        <TagsInputInput placeholder="autor1, autor2..." />
+                    </TagsInput>
+                </div>
+                <div class="grid gap-3 ">
+                    <Label>Selecionar um status</Label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem
+                                    v-for="repo in repositories" :key="repo.id" :value="repo"
+                                >
+                                {{ repositories }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
-
-            <div class="">
-                <label for="img_link" class="block text-sm font-medium text-gray-300 dark:text-gray-300">Imagem do
-                    projeto (opcional)</label>
-                <input type="file" @input="form.image = $event.target.files[0]" accept="image/*" class="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4
-                        file:rounded-sm file:border-0
-                        file:text-sm file:font-semibold
-                        file:bg-purple-600 file:text-white
-                        hover:file:bg-purple-900
-                        bg-gray-300 border border-gray-600 rounded-lg cursor-pointer" id="image" />
-                <p class="mt-1 text-xs text-gray-600 dark:text-gray-300" id="file_input_help">PNG, JPG or JPEG (MAX.
-                    10mb).
-                </p>
-                <p v-if="form.errors.image" class="mt-1 text-sm text-red-500">
-                    {{ form.errors.image }}
-                </p>
+            <div class="flex justify-between gap-4">
+                <div class="w-full">
+                    <div class="grid w-full max-w-sm items-center gap-1.5">
+                        <Label for="picture">Imagem</Label>
+                        <Input id="picture" type="file"/>
+                    </div>
+                                    <p class="mt-1 text-xs text-foreground" id="file_input_help">PNG, JPG or JPEG (MAX.
+                        10mb).
+                    </p>
+                </div>
+                <div class="w-full">
+                    <Label class="pb-2">Selecionar tags</Label>
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="tags" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem
+                                    v-for="tag in tags" :key="tag.id" :value="tag"
+                                >
+                                {{ tag.name }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
-
-
-            <button type="submit"
-                class="px-4 py-2 bg-purple-600 text-white rounded-sm hover:bg-purple-900 transition-colors"
+            <Button type="submit"
+                class="w-full"
                 :disabled="form.processing">
                 <span v-if="form.processing">Enviando...</span>
                 <span v-else>{{ editMode ? 'Atualizar' : 'Criar' }} Projeto</span>
-            </button>
+            </Button>
         </form>
     </div>
 </template>
