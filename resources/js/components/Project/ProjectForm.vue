@@ -22,15 +22,16 @@ import {
     TagsInputItemText 
 } from "@/components/ui/tags-input";
 
+const user = usePage().props.auth.user;
 const repositories = ref([]);
 const collaborators = ref([]);
 const selectedRepo = ref(null);
 const loadingCollabs = ref(false);
-const collaboratorsInput = ref('');
+const collaboratorsInput = ref([`${user.nickname}`]);
 const isLoading = ref(false);
 const editMode = ref(false);
-const user = usePage().props.auth.user;
-const modelValue = ref([`${user.nickname}`]);
+const statusInput = ref(['rascunho', 'em_andamento', 'concluido']);
+const statusSelected = ref('');
 
 const props = defineProps({
     project: Object | null,
@@ -55,11 +56,10 @@ const loadRepoCollaborators = async (repoFullName) => {
 
     const [owner, repo] = repoFullName.split('/');
     loadingCollabs.value = true;
-
     try {
         const response = await axios.get(`/github/repos/${owner}/${repo}/collaborators`);
         collaborators.value = response.data;
-        collaboratorsInput.value = response.data.map(c => c.login).join(', ');
+        collaboratorsInput.value = response.data.map(c => c.login);
     } catch (error) {
         console.error('Error loading collaborators:', error);
     } finally {
@@ -80,9 +80,9 @@ watch(selectedRepo, (newRepo) => {
 const form = useForm({
     title: props.project?.title,
     description: props.project?.description,
-    status: props.project?.status,
+    status: props.project?.status || statusSelected,
     tags: props.project?.tags || [],
-    image: null,
+    image: props.project?.image || '',
     repo_url: props.project?.repo_url || '',
 });
 
@@ -93,7 +93,7 @@ const submit = () => {
 const initForm = () => {
     if (props.project) {
         editMode.value = true;
-        collaboratorsInput.value = props.project.authors?.map(author => author.name).join(', ');
+        collaboratorsInput.value = props.project.authors?.map(author => author.name);
     } else {
         editMode.value = false;
         loadRepositories();
@@ -101,7 +101,7 @@ const initForm = () => {
     }
 };
 
-console.log(repositories);
+console.log(repositories.value);
 
 onMounted(() => {
     initForm();
@@ -116,29 +116,30 @@ onMounted(() => {
             <div class="flex justify-between gap-4 items-center">
                 <div class="grid gap-3 w-full">
                     <Label>Selecionar um repositório</Label>
-                    <Select class="w-full">
+                    <Select class="w-full" v-model="selectedRepo" id="select_repo" :disabled="isLoading">
                         <SelectTrigger clas>
                             <SelectValue placeholder="Selecione um repositório" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectLabel v-if="repositories">repositorio</SelectLabel>
+                                <SelectLabel v-if="repositories">repositórios</SelectLabel>
                                 <SelectLabel v-else>Sem repositórios</SelectLabel>
                                 <SelectItem
                                     v-for="repo in repositories" :key="repo.id" :value="repo"
                                 >
-                                {{ repositories }}
+                                {{ repo.name }}
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
                 </div>
                 <div class="grid gap-3 w-full">
-                    <Label for="repo_url" >URL do repositório</Label>
+                    <Label for="repo_url">URL do repositório</Label>
                     <Input
                         id="repo_url"
                         type="url"
                         v-model="form.repo_url"
+                        :value="form.repo_url"
                         placeholder="https://github.com/usuario/projeto"
                     />
                     <p v-if="form.errors.repo_url" class="mt-1 text-sm text-red-500">
@@ -163,24 +164,24 @@ onMounted(() => {
                     class="h-50"
                     id="descricao"
                     type="text"
-                    v-model="form.descricao"
+                    v-model="form.description"
                 />
-                <p v-if="form.errors.descricao" class="mt-1 text-sm text-red-500">
-                    {{ form.errors.descricao }}
+                <p v-if="form.errors.description" class="mt-1 text-sm text-red-500">
+                    {{ form.errors.description }}
                 </p>
             </div>
-            <div class="flex justify-between gap-4">
-                <div class="grid gap-3 w-100 ">
+            <div class="flex justify-between gap-30">
+                <div class="grid gap-3 w-[78%]"> <!--  -->
                     <Label>Adicionar autores</Label>
-                    <TagsInput v-model="modelValue">
-                        <TagsInputItem v-for="item in modelValue" :key="item" :value="item">
+                    <TagsInput v-model="form.authors">
+                        <TagsInputItem v-for="item in form.authors" :key="item" :value="item">
                             <TagsInputItemText />
                             <TagsInputItemDelete />
                         </TagsInputItem>
                         <TagsInputInput placeholder="autor1, autor2..." />
                     </TagsInput>
                 </div>
-                <div class="grid gap-3 ">
+                <div class="grid gap-3 w-full">
                     <Label>Selecionar um status</Label>
                     <Select>
                         <SelectTrigger>
@@ -189,9 +190,14 @@ onMounted(() => {
                         <SelectContent>
                             <SelectGroup>
                                 <SelectItem
-                                    v-for="repo in repositories" :key="repo.id" :value="repo"
+                                    v-for="(status, index) in statusInput" :key="index" :value="status"    
                                 >
-                                {{ repositories }}
+                                <p v-if="status == 'em_andamento'">
+                                    Em andamento
+                                </p>
+                                <p v-else>
+                                    {{ status }}
+                                </p>
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>
@@ -202,7 +208,7 @@ onMounted(() => {
                 <div class="w-full">
                     <div class="grid w-full max-w-sm items-center gap-1.5">
                         <Label for="picture">Imagem</Label>
-                        <Input id="picture" type="file"/>
+                        <Input v-model="form.image" id="picture" type="file"/>
                     </div>
                                     <p class="mt-1 text-xs text-foreground" id="file_input_help">PNG, JPG or JPEG (MAX.
                         10mb).

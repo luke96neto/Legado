@@ -9,7 +9,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <SelectValue data-slot="select-value" v-bind="props" class="mr-20">
+  <SelectValue data-slot="select-value" v-bind="props" class="mr-30">
     <slot />
   </SelectValue>
 </template>
