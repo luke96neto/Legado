@@ -13,6 +13,10 @@ const submit = (form) => {
     });
 };
 
+const props = defineProps({
+    tags: Array,
+});
+
 import ProjectForm from '@/components/Project/ProjectForm.vue';
 
 </script>
@@ -23,7 +27,7 @@ import ProjectForm from '@/components/Project/ProjectForm.vue';
     <AuthenticatedLayout>
 
         <div class="container mx-auto px-4 py-8">
-            <ProjectForm @submit="submit" />
+            <ProjectForm @submit="submit" :tags="props.tags" />
         </div>
     </AuthenticatedLayout>
 </template>

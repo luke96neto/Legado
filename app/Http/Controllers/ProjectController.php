@@ -72,7 +72,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Project/Create');
+        $tags = Tag::all();
+        return Inertia::render('Project/Create', ['tags' => $tags]);
     }
 
     /**
@@ -85,32 +86,36 @@ class ProjectController extends Controller
             'description' => 'nullable|string',
             'status' => 'required|in:rascunho,em_andamento,concluido',
             'image' => 'nullable|image|max:10240',
-            'repo_url' => 'nullable|url'
+            'repo_url' => 'nullable|url',
+            'tags' => 'required|array',
+            'tags.*' => 'exists:tags,name',
+            'authors' => 'required|array'
         ]);
         
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('project-images', 'public');
         }
 
+        // Criar projeto
+        $project = $request->user()->projects()->create($validated);
+
+        // Adicionar tags
+        $tagIds = Tag::whereIn('name', $request->tags)->pluck('id')->toArray();
+        $project->tags()->sync($tagIds);
+
+        // Adicionar autores
         $author = Author::firstOrCreate([
             'user_id' => $request->user()->id,
         ], [
             'name' => $request->user()->nickname
         ]);
-        
-        $project = $request->user()->projects()->create($validated);
         $project->authors()->attach($author->id);
 
-        $authorlist = array_map('trim', explode(',', $request['authors']));
-        $authorlist = array_diff($authorlist, [$request->user()->nickname]);
-        
-        foreach ($authorlist as $name) {
-            $addauthor = Author::firstOrCreate([
-                'name' => $name
-            ],[
-                'name' => $name
-            ]);
-            $project->authors()->attach($addauthor->id);
+        foreach ($request->authors as $name) {
+            if ($name !== $request->user()->nickname) {
+                $addauthor = Author::firstOrCreate(['name' => trim($name)]);
+                $project->authors()->attach($addauthor->id);
+            }
         }
 
         return redirect()->route('project.show', $project->slug);
@@ -169,23 +174,43 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(\App\Http\Requests\ProjectUpdateRequest $request, Project $project)
+    public function update(Request $request, Project $project)
     {
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:rascunho,em_andamento,concluido',
+            'image' => 'nullable|image|max:10240',
+            'existing_image' => 'nullable|string', // Adicione este campo
+            'repo_url' => 'nullable|url',
+            'tags' => 'required|array',
+            'tags.*' => 'exists:tags,name',
+            'authors' => 'required|array'
+        ]);
 
-        $project->fill($validated);
-
-        if (isset($validated['tag_id'])) {
-            $project->tags()->sync([$validated['tag_id']]);
+        // Mantém a imagem existente se não for enviada uma nova
+        if (!$request->hasFile('image') && $validated['existing_image']) {
+            $validated['image'] = $validated['existing_image'];
+        } elseif ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('project-images', 'public');
         }
 
-        if ($request->hasFile('image')) {
-            $project->image = $request->file('image')->store('project-images', 'public');
+        // Atualiza o projeto
+        $project->update($validated);
+
+        // Sincroniza tags
+        $tagIds = Tag::whereIn('name', $request->tags)->pluck('id')->toArray();
+        $project->tags()->sync($tagIds);
+
+        // Sincroniza autores
+        $authors = [];
+        foreach ($request->authors as $name) {
+            $author = Author::firstOrCreate(['name' => trim($name)]);
+            $authors[] = $author->id;
         }
+        $project->authors()->sync($authors);
 
-        $project->save();
-
-        return redirect()->route('project.show', $project->slug)->with('status', 'Projeto atualizado com sucesso!');
+        return redirect()->route('project.show', $project->slug);
     }
 
     /**
