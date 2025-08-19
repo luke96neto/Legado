@@ -49,7 +49,7 @@ const updatePassword = () => {
         </header>
 
         <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
-            <div v-if="!user.has_password" class="mt-1 block w-full text-white">
+            <div v-if="!user.has_password" class="mt-1 block w-full text-foreground">
                 Você está logado via rede social. Defina uma senha para acessar com email.
             </div>
             <div v-if="user.has_password">

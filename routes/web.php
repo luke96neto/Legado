@@ -26,9 +26,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/project/{project:slug}', [ProjectController::class, 'update'])->name('project.update');        
         Route::post('/store', [ProjectController::class, 'store'])->name('project.store');
     });
-    Route::get('/dashboard', function(){
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
     Route::get('/profile/{nickname}', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -35,15 +35,15 @@ const userIsLoggedIn = !!page.props.auth.user;
                     </div>
                 </CardHeader>
 
-                <CardContent class="pt-6 grid gap-6">
+                <CardContent class=" grid gap-6">
+                    
+                    <div v-if="project.image" class="rounded-md overflow-hidden">
+                        <img :src="`/storage/${project.image}`" :alt="`Imagem do projeto ${project.title}`"
+                            class="w-full h-auto max-h-96 object-contain">
+                    </div>
                     <div>
                         <h3 class="text-lg font-medium text-foreground mb-2">Descrição</h3>
                         <p class="text-muted-foreground">{{ project.description || 'Nenhuma descrição fornecida' }}</p>
-                    </div>
-
-                    <div v-if="project.image" class="rounded-md overflow-hidden border border-ring">
-                        <img :src="`/storage/${project.image}`" :alt="`Imagem do projeto ${project.title}`"
-                            class="w-full h-auto max-h-96 object-contain">
                     </div>
 
                     <div class="grid md:grid-cols-3 gap-4">

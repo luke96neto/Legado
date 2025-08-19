@@ -198,7 +198,7 @@ onMounted(() => {
             </div>
             <div class="w-full">
                 <Label for="descricao" class="pb-2">Descrição</Label>
-                <Textarea class="h-50" id="descricao" type="text" v-model="form.description" />
+                <Textarea class="h-20" id="descricao" type="text" v-model="form.description" />
                 <p v-if="form.errors.description" class="mt-1 text-sm text-red-500">
                     {{ form.errors.description }}
                 </p>

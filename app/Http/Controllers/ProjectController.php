@@ -23,29 +23,39 @@ class ProjectController extends Controller
         $data = $request->query();
         $page = $request->query('page');
         $filter_by_bookmarks = $request->query('isFavorite');
-        $filter_by_tags = $request->query('tags') ? explode(',',$request->query('tags')) : [];
-        $all_projects = Project::with('authors', 'feedbacks', 'tags')
-                            ->withAvg('feedbacks', 'rating')
-                            ->withCount('favoritedBy')
-                            ->latest()
-                            ->get();
+        $filter_by_tags = $request->query('tags') ? explode(',', $request->query('tags')) : [];
+        $search = $request->query('search');
+
+        $query = Project::with('authors', 'feedbacks', 'tags')
+                    ->withAvg('feedbacks', 'rating')
+                    ->withCount('favoritedBy')
+                    ->latest();
+
+        // Aplica filtro de pesquisa
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $all_projects = $query->get();
         $all_tags = Tag::all();
         
-        $filtered_projects = $all_projects->filter(function($project) use ($filter_by_bookmarks, $filter_by_tags, $request){
+        $filtered_projects = $all_projects->filter(function($project) use ($filter_by_bookmarks, $filter_by_tags, $request) {
             $include = true;
             $includeBybookmarks = true;
             $includeByTags = true;
-            if(!empty($filter_by_tags)) {
+            
+            if (!empty($filter_by_tags)) {
                 $includeByTags = $project->tags->pluck('id')->intersect($filter_by_tags)->count() == count($filter_by_tags);
             }
             
             if ($filter_by_bookmarks) {
                 $includeBybookmarks = $request->user()->favoriteds->some('id', $project->id);
             }
-            if(!$includeBybookmarks || !$includeByTags){
-                $include = false;
-            }
-            return $include;
+            
+            return $includeBybookmarks && $includeByTags;
         });
         
         $projects = $filtered_projects->forPage($page, $PAGE_SIZE);
@@ -229,7 +239,7 @@ class ProjectController extends Controller
         $completedProjects = Project::where('status', 'concluido')->count();
         $draftProjects = Project::where('status', 'rascunho')->count();
 
-        $examples = Project::where('is_example', true)->get(); // Campo booleano
+        $examples = Project::where('is_example', true)->get();
 
         $topCreators = User::withCount('projects')
                         ->orderByDesc('projects_count')

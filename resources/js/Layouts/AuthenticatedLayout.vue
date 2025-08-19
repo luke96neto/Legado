@@ -14,6 +14,7 @@ import { useDark, useToggle } from "@vueuse/core";
 
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
+
 const showingNavigationDropdown = ref(false);
 
 </script>
@@ -37,7 +38,7 @@ const showingNavigationDropdown = ref(false);
 									Dashboard
 								</NavLink>
 								<NavLink :href="route('project.index')" :active="route().current('project.index')">
-									Projects
+									Projetos
 								</NavLink>
 							</div>
 						</div>
@@ -84,17 +85,18 @@ const showingNavigationDropdown = ref(false);
 											</span>
 										</template>
 										<template #content>
-											<DropdownLink :href="route('profile.show', $page.props.auth.user.nickname)"> Profile </DropdownLink>
-                      <DropdownLink :href="route('profile.edit')"> Settings </DropdownLink>
-                      <DropdownLink :href="route('logout')" method="post" as="button">
-                        Log Out
-                      </DropdownLink>
-                    </template>
+											<DropdownLink :href="route('profile.edit')"> Configurações </DropdownLink>
+											<DropdownLink :href="route('logout')" method="post" as="button">
+												Sair
+											</DropdownLink>
+										</template>
 									</Dropdown>
 								</div>
 								<Avatar>
 									<AvatarImage :src="'/storage/' + $page.props.auth.user.image" alt="@unovue" />
-									<AvatarFallback>Profile image</AvatarFallback>
+									<AvatarFallback class="bg-input">
+										{{ $page.props.auth.user.name?.charAt(0) || $page.props.auth.user.nickname?.charAt(0) || 'U' }}
+									</AvatarFallback>
 								</Avatar>
 							</div>
 							<div class="-me-2 flex items-center sm:hidden">
@@ -158,8 +160,8 @@ const showingNavigationDropdown = ref(false);
 			</nav>
 
 			<!-- Page Heading -->
-			<header class="shadow-sm bg-gray-800" v-if="$slots.header">
-				<div class="mx-auto max-w-7xl px-4 py-2 sm:px-4 lg:px-6">
+			<header class="shadow-sm bg-card text-primary/80 border-b" v-if="$slots.header">
+				<div class="mx-auto max-w-5xl px-4 py-4 sm:px-4 lg:px-6">
 					<slot name="header" />
 				</div>
 			</header>

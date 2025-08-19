@@ -70,7 +70,7 @@ function isAuthor(project) {
 		>
 			<div>
 				<h3 class="text-lg font-bold mb-2">{{ title }}</h3>
-				<p class="text-sm mb-3 max-h-45 overflow-hidden">{{ description }}</p>
+				<p class="text-sm mb-3 max-h-30 overflow-hidden">{{ description }}</p>
 				<div>
 					<span class="font-semibold">Tags: </span>
 					<template v-if="tags && tags.length">

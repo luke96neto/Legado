@@ -18,7 +18,6 @@ class ProjectFactory extends Factory
             'description' => fake()->paragraphs(3, true),
             'status' => fake()->randomElement(['rascunho', 'em_andamento', 'concluido']),
             'user_id' => User::factory(),
-            'image' => fake()->optional()->imageUrl(),
             'repo_url' => fake()->optional()->url(),
         ];
     }
