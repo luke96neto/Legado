@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3'; // Adicionei Link aqui
+import { Head, Link } from '@inertiajs/vue3';
 
 const submit = (form) => {
     form.post('store', {
@@ -35,13 +35,12 @@ import ProjectForm from '@/components/Project/ProjectForm.vue';
                     </svg>
                     Voltar
                 </Link>
-                <h2 class="text-xl font-semibold leading-tight text-center flex-1">
+                <h2 class="text-xl font-semibold leading-tight text-center flex-1 text-white">
                     Adicionar Projeto
                 </h2>
                 <div class="w-20"></div>
             </div>
         </template>
-        
         <div class="container mx-auto px-4 py-8">
             <ProjectForm @submit="submit" :tags="props.tags" />
         </div>

@@ -162,10 +162,10 @@ onMounted(() => {
 <template>
     <div class="container max-w-5xl mx-auto px-4 py-8 border border-ring bg-card rounded">
         <form @submit.prevent="submit" class="grid gap-6">
-            <div class="flex justify-between gap-4 items-center">
-                <div class="grid gap-3 w-full">
-                    <Label>Selecionar um repositório</Label>
-                    <Select class="w-full" v-model="selectedRepo" id="select_repo" :disabled="isLoading">
+            <div class="flex justify-between gap-4">
+                <div class="grid gap-3">
+                    <Label>Repositórios</Label>
+                    <Select v-model="selectedRepo" class="w-50" id="select_repo" :disabled="isLoading">
                         <SelectTrigger clas>
                             <SelectValue placeholder="Selecione um repositório" />
                         </SelectTrigger>
@@ -203,24 +203,40 @@ onMounted(() => {
                     {{ form.errors.description }}
                 </p>
             </div>
-            <div class="flex justify-between gap-4 items-center">
-                <div class="grid gap-3 w-full">
-                    <Label>Adicionar autores</Label>
+            <div class="flex gap-4">
+                <div class="w-full">
+                    <Label class="pb-2">Adicionar autores</Label>
                     <TagsInput v-model="form.authors">
+                        <TagsInputInput placeholder="Digite um autor e pressione Enter" />
                         <TagsInputItem v-for="item in form.authors" :key="item" :value="item">
                             <TagsInputItemText />
                             <TagsInputItemDelete @click="form.authors.splice(index, 1)" />
                         </TagsInputItem>
-                        <TagsInputInput placeholder="Digite um autor e pressione Enter" />
                     </TagsInput>
                 </div>
+                <div class="w-full gap-2">
+                    <Label for="image" class="pb-2">Imagem</Label>
+                    <Input id="image" type="file" @change="handleImageChange" accept="image/*" />
+                    
+                    <p v-if="form.errors.image" class="mt-1 text-sm text-red-500">
+                        {{ form.errors.image }}
+                    </p>
+                    <div v-if="previewImage" class="mt-2">
+                        <img :src="previewImage" class="h-20 w-auto rounded-md object-cover" />
+                    </div>
+                    <p v-else class="mt-1 text-xs text-foreground">
+                        PNG, JPG or JPEG (MAX. 10mb).
+                    </p>
+                </div>
+            </div>
+            <div class="flex justify-between gap-4">
                 <div class="w-full relative">
                     <Label class="pb-2">Selecionar tags</Label>
                     <div @click="isTagsDropdownOpen = !isTagsDropdownOpen"
-                        class="flex items-center justify-between w-full px-3 py-2 border rounded-md cursor-pointer hover:border-primary">
+                        class="flex items-center justify-between px-3 py-1.5 border rounded-md bg-input cursor-pointer hover:border-primary">
                         <div class="flex flex-wrap gap-1">
                             <span v-for="tag in selectedTags" :key="tag"
-                                class="px-2 py-1 bg-primary text-primary-foreground rounded-full text-xs flex items-center">
+                                class="px-2 py-1 bg-primary text-primary-foreground rounded-md text-xs flex items-center">
                                 {{ tag }}
                                 <span @click.stop="toggleTag(tag)" class="ml-1 cursor-pointer">×</span>
                             </span>
@@ -242,29 +258,10 @@ onMounted(() => {
                         </div>
                     </Transition>
                 </div>
-            </div>
-            <div class="flex justify-between gap-4">
                 <div class="w-full">
-                    <div class="grid w-full max-w-sm items-center gap-1.5">
-                        <Label for="image">Imagem</Label>
-
-                        <div v-if="previewImage" class="mb-2">
-                            <img :src="previewImage" class="h-20 w-auto rounded-md object-cover" />
-                        </div>
-
-                        <Input id="image" type="file" @change="handleImageChange" accept="image/*" />
-                        <p v-if="form.errors.image" class="mt-1 text-sm text-red-500">
-                            {{ form.errors.image }}
-                        </p>
-                        <p class="mt-1 text-xs text-foreground">
-                            PNG, JPG or JPEG (MAX. 10mb).
-                        </p>
-                    </div>
-                </div>
-                <div class="grid gap-3 w-full">
                     <Label>Selecionar um status</Label>
                     <Select v-model="form.status">
-                        <SelectTrigger>
+                        <SelectTrigger class="mt-2">
                             <SelectValue placeholder="Selecione um status" />
                         </SelectTrigger>
                         <SelectContent>
@@ -285,13 +282,15 @@ onMounted(() => {
                     </p>
                 </div>
             </div>
-            <Button type="submit" class="w-full" :disabled="form.processing">
-                <span v-if="form.processing">
-                    <Loader2 class="h-4 w-4 animate-spin mr-2" />
-                    Processando...
-                </span>
-                <span v-else>{{ editMode ? 'Atualizar' : 'Criar' }} Projeto</span>
-            </Button>
+            <div class="flex justify-center">
+                <Button type="submit" class="w-50" :disabled="form.processing">
+                    <span v-if="form.processing">
+                        <Loader2 class="h-4 w-4 animate-spin mr-2" />
+                        Processando...
+                    </span>
+                    <span v-else>{{ editMode ? 'Atualizar' : 'Criar' }} Projeto</span>
+                </Button>
+            </div>
         </form>
     </div>
 </template>

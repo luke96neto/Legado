@@ -22,7 +22,7 @@ const forwardedProps = useForwardProps(delegatedProps);
     v-bind="forwardedProps"
     :class="
       cn(
-        'text-sm min-h-5 focus:outline-none rounded flex-1 bg-background/50 px-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+        'text-sm rounded-md border-none w-full bg-input focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
         props.class,
       )
     "

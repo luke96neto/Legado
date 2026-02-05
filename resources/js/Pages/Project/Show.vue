@@ -36,7 +36,6 @@ const userIsLoggedIn = !!page.props.auth.user;
                 </CardHeader>
 
                 <CardContent class=" grid gap-6">
-                    
                     <div v-if="project.image" class="rounded-md overflow-hidden">
                         <img :src="`/storage/${project.image}`" :alt="`Imagem do projeto ${project.title}`"
                             class="w-full h-auto max-h-96 object-contain">

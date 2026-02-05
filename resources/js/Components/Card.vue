@@ -48,11 +48,18 @@ function isAuthor(project) {
 			<div
 				v-if="status"
 				>
-
 				<span
 					class="absolute top-2 left-2 bg-chart-4 text-background font-semibold text-xs px-2 py-1 rounded-full"
 				>
-					{{ status }}
+					<p v-if="status == `rascunho`">
+						Rascunho
+					</p>
+					<p v-else-if="status == `em_andamento`">
+						Em andamento
+					</p>
+					<p v-else>
+						Concluído
+					</p>
 				</span>
 			</div>
 		</figure>
