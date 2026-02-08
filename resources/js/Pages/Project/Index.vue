@@ -4,7 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
 import { reactive, watch } from 'vue';
-import Card from '@/Components/Card.vue';
+import Card from '@/components/Card.vue';
 import { Input } from '@/components/ui/input'; // Adicione esta importação
 
 const props = defineProps({
@@ -130,7 +130,7 @@ watch(() => form.search, (newValue) => {
                 <Card v-for="project in projects.data" :key="project.id" :title="project.title" :image="project.image"
                     :description="project.description" :link="route('project.show', project.slug)"
                     :status="project.status" :tags="project.tags" :ownerId="project.user_id" :slug="project.slug"
-                    :averageRating="project.feedbacks_avg_rating" fallback="/project-images/default.jpg" />
+                    :averageRating="project.feedbacks_avg_rating" fallback="default-project-image.png" />
             </div>
 
             <!-- Mensagem quando não há resultados -->

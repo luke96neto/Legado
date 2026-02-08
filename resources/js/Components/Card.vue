@@ -13,7 +13,7 @@ const props = defineProps({
 	averageRating: Number,
 	fallback: {
 		type: String,
-		default: '/default.jpg'
+		default: 'default-project-image.png'
 	}
 });
 
@@ -34,7 +34,7 @@ function isAuthor(project) {
 	>
 		<figure class="relative w-full h-48">
 			<img
-				:src="image ? `/storage/${image}` : `/storage/${fallback}`"
+				:src="image ? `/storage/${image}` : `/storage/project-images/${fallback}`"
 				:alt="title || 'Imagem padrão do card'"
 				loading="lazy"
 				class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
