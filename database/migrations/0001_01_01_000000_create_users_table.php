@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('google_id')->nullable();
-            $table->string('google_token')->nullable();
+            $table->longText('google_token')->nullable();
             $table->string('google_refresh_token')->nullable();
             $table->string('github_id')->nullable();
             $table->string('github_token')->nullable();
