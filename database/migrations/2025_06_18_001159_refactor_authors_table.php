@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::table('authors', function (Blueprint $table) {
             $table->dropForeign(['project_id']);
+            $table->dropForeign(['user_id']);
             $table->dropUnique(['user_id', 'project_id']);
             $table->dropColumn(['project_id']);
             $table->foreignId('user_id')->nullable()->change();

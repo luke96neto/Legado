@@ -18,6 +18,7 @@ class Project extends Model
         'repo_url',
         'user_id',
         'slug',
+        'is_example'
     ];
 
     protected static function boot()

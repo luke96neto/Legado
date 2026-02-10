@@ -16,6 +16,7 @@ return new class extends Migration
             $table->enum('status', ['rascunho', 'em_andamento', 'concluido', 'excluido'])->default('rascunho');
             $table->string('slug')->unique('projects_slug_unique');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->boolean('is_example')->default(false);
         });
     }
 
@@ -31,6 +32,7 @@ return new class extends Migration
             $table->string('status')->default('Em andamento');
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
+            $table->dropColumn('is_example');
         });
     }
 };
