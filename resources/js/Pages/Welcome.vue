@@ -44,7 +44,7 @@ onBeforeUnmount(() => {
         >
             <div class="container mx-auto px-6 flex justify-between items-center">
                 <div class="transform transition-transform duration-300 hover:scale-102">
-                    <img src="/img/logo-legado-wname.png" class="w-40 h-auto" alt="Logo Legado">
+                    <img src="/img/logoimg.png" class="w-40 h-auto text-[var(--color-primary)]" alt="Logo Legado">
                 </div>
                 <div class="flex items-center gap-10">
                     <Switch :model-value="isDark" @update:model-value="toggleDark" class="transform transition-transform duration-300 hover:scale-105">
@@ -94,8 +94,8 @@ onBeforeUnmount(() => {
         </nav>
 
         <!-- Hero Section -->
-        <div class="relative z-20 mt-20 h-7xl flex items-center justify-center px-4">
-            <div class="container mx-auto max-w-5xl text-center ">
+        <div class="relative z-20 mt-50 h-7xl flex items-center justify-center px-4">
+            <div class="container mx-auto max-w-5xl text-center">
                 <img src="/img/globo-Legado.png" alt="Logo" class="mx-auto  h-auto" />
                 <!-- Main Heading -->
                 <div class="mb-8">
