@@ -8,8 +8,8 @@ use Illuminate\Support\Str;
 
 class Project extends Model
 {
-
     use HasFactory;
+
     protected $fillable = [
         'title',
         'description',
@@ -88,5 +88,4 @@ class Project extends Model
     {
         return $this->favoritedBy()->where('user_id', $userId)->exists();
     }
-
 }

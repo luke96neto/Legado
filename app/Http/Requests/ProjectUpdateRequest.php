@@ -2,21 +2,13 @@
 
 namespace App\Http\Requests;
 
-/**
- * @mixin \Illuminate\Http\Request
- */
-
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-/**
- * @method \App\Models\User user()
- */
 class ProjectUpdateRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Apenas o autor pode editar
         $project = $this->route('project');
         return $this->user() && $project && $this->user()->projects()->where('id', $project->id)->exists();
     }

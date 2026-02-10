@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Tag;
-use App\Models\Feedback;
 use App\Models\Author;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,9 +13,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $PAGE_SIZE = 15;
@@ -31,7 +27,6 @@ class ProjectController extends Controller
                     ->withCount('favoritedBy')
                     ->latest();
 
-        // Aplica filtro de pesquisa
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
@@ -43,7 +38,6 @@ class ProjectController extends Controller
         $all_tags = Tag::all();
         
         $filtered_projects = $all_projects->filter(function($project) use ($filter_by_bookmarks, $filter_by_tags, $request) {
-            $include = true;
             $includeBybookmarks = true;
             $includeByTags = true;
             
@@ -77,18 +71,12 @@ class ProjectController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $tags = Tag::all();
         return Inertia::render('Project/Create', ['tags' => $tags]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -106,14 +94,11 @@ class ProjectController extends Controller
             $validated['image'] = $request->file('image')->store('project-images', 'public');
         }
 
-        // Criar projeto
         $project = $request->user()->projects()->create($validated);
 
-        // Adicionar tags
         $tagIds = Tag::whereIn('name', $request->tags)->pluck('id')->toArray();
         $project->tags()->sync($tagIds);
 
-        // Adicionar autores
         $author = Author::firstOrCreate([
             'user_id' => $request->user()->id,
         ], [
@@ -131,12 +116,8 @@ class ProjectController extends Controller
         return redirect()->route('project.show', $project->slug);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($slug)
     {
-
         $project = Project::where('slug', $slug)->firstOrFail();
 
         $project->load('authors');
@@ -167,9 +148,6 @@ class ProjectController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Project $project)
     {
         $tags = Tag::all();
@@ -181,9 +159,6 @@ class ProjectController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
@@ -191,28 +166,24 @@ class ProjectController extends Controller
             'description' => 'nullable|string',
             'status' => 'required|in:rascunho,em_andamento,concluido',
             'image' => 'nullable|image|max:10240',
-            'existing_image' => 'nullable|string', // Adicione este campo
+            'existing_image' => 'nullable|string',
             'repo_url' => 'nullable|url',
             'tags' => 'required|array',
             'tags.*' => 'exists:tags,name',
             'authors' => 'required|array'
         ]);
 
-        // Mantém a imagem existente se não for enviada uma nova
         if (!$request->hasFile('image') && $validated['existing_image']) {
             $validated['image'] = $validated['existing_image'];
         } elseif ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('project-images', 'public');
         }
 
-        // Atualiza o projeto
         $project->update($validated);
 
-        // Sincroniza tags
         $tagIds = Tag::whereIn('name', $request->tags)->pluck('id')->toArray();
         $project->tags()->sync($tagIds);
 
-        // Sincroniza autores
         $authors = [];
         foreach ($request->authors as $name) {
             $author = Author::firstOrCreate(['name' => trim($name)]);
@@ -223,13 +194,11 @@ class ProjectController extends Controller
         return redirect()->route('project.show', $project->slug);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Project $project)
     {
         //
     }
+    
     public function dashboard()
     {
         $user = Auth::user();

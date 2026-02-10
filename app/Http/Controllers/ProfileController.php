@@ -15,9 +15,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
     public function edit(Request $request): Response
     {
         $user = $request->user();
@@ -29,15 +26,9 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        \Log::debug('Dados recebidos controller');
-
         $user = $request->user();
-        $validated = $request->validated();
         $user->fill($request->safe()->except(['image']));
         
         if ($request->hasFile('image')) {
@@ -54,23 +45,19 @@ class ProfileController extends Controller
         }
 
         $user->save();
-        \Log::debug('Dados salvos controller');
 
         return Redirect::route('profile.edit');
     }
 
-    public function show($nickname){
+    public function show($nickname)
+    {
         $user = User::where('nickname', $nickname)->firstOrFail();
 
         return Inertia::render('Profile/Show', [
             'user' => $user
         ]);
-
     }
 
-    /**
-     * Delete the user's account.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validate([
